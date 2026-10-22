@@ -8,7 +8,9 @@ A proposed layered software-protection strategy: licensing, device identity, ser
 
 ## Publication
 
-The repository is private. GitHub Pages is intentionally not enabled: a private personal repository does not guarantee a private Pages website. After explicitly accepting public website access and confirming account eligibility, configure Pages to deploy from `main` → `/docs`. For private Pages access, use an eligible GitHub Enterprise Cloud organization and verify access controls before publishing.
+The repository and website are public. GitHub Pages deploys directly from `main` → `/docs` using branch-based publishing, with no custom GitHub Actions workflow.
+
+Website: https://shubin123.github.io/nurture/
 
 ## Scope
 

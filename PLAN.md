@@ -85,4 +85,4 @@ Triage alerts → preserve minimal evidence → verify ownership and impact → 
 
 ## Hosting and privacy
 
-Keep the GitHub repository private. The static page in `docs/` is ready for GitHub Pages, but publication is deliberately disabled pending a hosting visibility decision. A private personal repository does not by itself make a Pages website private. Consult GitHub's current Pages documentation before enabling publication. No secrets or production security implementation belong in this documentation repository.
+The GitHub repository and static website are public, as approved by the owner. GitHub Pages publishes from the `main` branch and `/docs` directory without a custom Actions workflow. No secrets or production security implementation belong in this documentation repository.
