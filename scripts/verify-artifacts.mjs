@@ -12,7 +12,7 @@ for (const asset of manifest.assets) {
 const release = JSON.parse(readFileSync('docs/reports/release.json'));
 assert.equal(release.worker_sha256, hash('docs/model-worker.js'));
 assert.equal(release.automatic_filter_gate_passed, false);
-for (const path of ['docs/reports/balanced-browser-benchmark.json', 'docs/reports/balanced-browser-evaluation.json']) {
+for (const path of ['docs/reports/balanced-browser-benchmark.json', 'docs/reports/balanced-browser-evaluation.json', 'docs/reports/release-browser-evaluation.json']) {
   assert.equal(JSON.parse(readFileSync(path)).worker_sha256, hash('docs/model-worker.js'), path);
 }
 for (const model of release.models) {
@@ -20,6 +20,12 @@ for (const model of release.models) {
   assert.equal(report.held_out_examples, 7000);
   assert.equal(report.models[model.id].original_span_subset.examples, 2000);
   assert.equal(report.models[model.id].rated_non_toxic_subset.examples, 5000);
+  const served = JSON.parse(readFileSync('docs/reports/release-browser-evaluation.json'));
+  assert.equal(served.profile, 'deployed');
+  assert.equal(served.held_out_examples, 7000);
+  assert.deepEqual(served.assets, report.assets);
+  assert.equal(served.models[model.id].original_span_subset.macro_character_f1, report.models[model.id].original_span_subset.macro_character_f1);
+  assert.equal(served.models[model.id].rated_non_toxic_subset.post_level_false_positive_rate, report.models[model.id].rated_non_toxic_subset.post_level_false_positive_rate);
   for (const asset of model.assets) {
     const path = `models/${model.id}/${asset.filename}`;
     assert.equal(hash(`docs/${path}`), asset.sha256, path);

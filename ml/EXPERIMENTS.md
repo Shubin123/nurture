@@ -58,10 +58,13 @@ MODEL_PROFILE=balanced node scripts/benchmark-browser.mjs
 MODEL_PROFILE=balanced node scripts/worker-memory.mjs
 node scripts/promote-candidates.mjs
 node scripts/manifest-models.mjs
-node scripts/verify-artifacts.mjs
 .venv/bin/python ml/render_report.py
 npm test
 npm run test:browser
+node scripts/evaluate-browser.mjs
+.venv/bin/python ml/report_browser.py
+node scripts/verify-served-models.mjs
+node scripts/verify-artifacts.mjs
 ```
 
 Promotion checks validation-objective improvement, frozen selection, browser/native consistency, diagnostic presence, latency, file size and asset/runtime fingerprints before copying to versioned `docs/models/linear-balanced/` and `docs/models/bert-mini-balanced/` paths. It does not assert safety or total-memory gates. `release.json` records both as false. The initial models and unprefixed browser reports preserve their original fingerprints; current release evidence has `balanced-` prefixes. Default deployed-profile harnesses read the release manifest, request actual served assets without interception and write `release-*` reports. Publication stays branch-based Pages without custom Actions workflows or agent commit attribution.

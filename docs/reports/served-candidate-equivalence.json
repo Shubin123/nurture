@@ -1,0 +1,42 @@
+{
+  "worker_sha256": "ce0e5cb056b67ec46e8e18ec343247b5f1993111e18d90192ca3360013f4c02b",
+  "assets": [
+    {
+      "model": "linear-balanced",
+      "filename": "config.json",
+      "bytes": 231,
+      "sha256": "dc63bd4d630fa427c0edced90633a576305013bbac72d7ee7984c7a36a32c32e"
+    },
+    {
+      "model": "linear-balanced",
+      "filename": "weights.int8",
+      "bytes": 65536,
+      "sha256": "9fbc32bb1b15de162764ade93bb9fe37ebdfcac776310745300d428178b4daee"
+    },
+    {
+      "model": "bert-mini-balanced",
+      "filename": "inference.json",
+      "bytes": 199,
+      "sha256": "0c498b9ecae773da6a1c4d6c552d3760cde131218704fa917bd8072260d0d284"
+    },
+    {
+      "model": "bert-mini-balanced",
+      "filename": "model.int8.onnx",
+      "bytes": 11351057,
+      "sha256": "ffa249fb1d48994b8470183d873fb40bb96e7090be1e15363fc584603cdf3e6c"
+    }
+  ],
+  "scope": "Actual served versioned assets, using the deployed profile without candidate request interception, compared with the frozen candidate browser run.",
+  "models": {
+    "linear-balanced": {
+      "examples": 7000,
+      "prediction_mismatches": 0,
+      "display_mismatches": 0
+    },
+    "bert-mini-balanced": {
+      "examples": 7000,
+      "prediction_mismatches": 0,
+      "display_mismatches": 0
+    }
+  }
+}

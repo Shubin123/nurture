@@ -27,6 +27,7 @@ Balanced training: 17,917 train, 2,689 validation. Test: 2,000 previously inspec
 
 - balanced-evaluation.json: frozen native original/balanced comparison. Browser Mini differs slightly because quantized batching/backends differ; browser results govern the UI.
 - balanced-browser-evaluation.json: all 7,000 comments evaluated through the compiled browser worker with exact candidate asset hashes.
+- release-browser-evaluation.json and served-candidate-equivalence.json: a second full 7,000-comment browser pass using actual served versioned assets without candidate request interception; all prediction/display decisions agree.
 - balanced-browser-benchmark.json: worker/roundtrip latency, batch sweeps, responsiveness and process-tree RSS proxy.
 - balanced-pre-ascii-benchmark.json and hash-fast-path-equivalence.json: before/after ASCII hashing measurements and zero prediction/display differences across 14,000 model-document pairs. Timing is reference-machine evidence, not a universal speedup.
 - balanced-challenge.json: both models falsely flag all six quotation/negation diagnostics. Benign identity mentions flag 2/10 (character) and 1/10 (Mini). These small authored probes are not fairness validation.
