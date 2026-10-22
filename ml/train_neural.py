@@ -67,7 +67,11 @@ def main():
     parser.add_argument('--epochs', type=int, default=8)
     parser.add_argument('--batch-size', type=int, default=64)
     parser.add_argument('--size', choices=['tiny', 'mini'], default='tiny')
+    parser.add_argument('--profile', choices=['original', 'balanced'], default='original')
     args = parser.parse_args()
+    suffix = '-balanced' if args.profile == 'balanced' else ''
+    criterion = 'balanced_context' if args.profile == 'balanced' else 'macro_character_f1'
+    learning_rate = 5e-5 if args.profile == 'balanced' else 1e-4
     random.seed(SEED)
     np.random.seed(SEED)
     torch.manual_seed(SEED)
@@ -75,17 +79,17 @@ def main():
     device = torch.device('mps' if torch.backends.mps.is_available() else 'cpu')
     model_id, revision = (MODEL, REVISION) if args.size == 'tiny' else (MINI_MODEL, MINI_REVISION)
     tokenizer = AutoTokenizer.from_pretrained(model_id, revision=revision, use_fast=True)
-    train, validation = load_split('train'), load_split('validation')
+    train, validation = load_split('train', args.profile), load_split('validation', args.profile)
     train_chunks, valid_chunks = Chunks(train, tokenizer), Chunks(validation, tokenizer)
     model = AutoModelForTokenClassification.from_pretrained(model_id, revision=revision, num_labels=2, id2label={0: 'O', 1: 'TOXIC'}, label2id={'O': 0, 'TOXIC': 1}, attn_implementation='eager').to(device)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4, weight_decay=0.01)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=0.01)
     loader = DataLoader(train_chunks, batch_size=args.batch_size, shuffle=True, generator=torch.Generator().manual_seed(SEED))
     total_steps = len(loader) * args.epochs
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lambda step: min((step + 1) / max(1, total_steps * 0.1), max(0.0, (total_steps - step) / max(1, total_steps * 0.9))))
     history = []
     best_score = -1
     started = time.perf_counter()
-    destination = RUNS / f'bert-{args.size}'
+    destination = RUNS / f'bert-{args.size}{suffix}'
     destination.mkdir(parents=True, exist_ok=True)
     tokenizer.save_pretrained(destination)
     for epoch in range(args.epochs):
@@ -102,15 +106,15 @@ def main():
             if (step + 1) % 100 == 0:
                 print(json.dumps({'epoch': epoch + 1, 'step': step + 1, 'steps': len(loader), 'loss': float(np.mean(losses[-100:]))}), flush=True)
         offsets, probabilities = predict(model, valid_chunks, validation, device)
-        best, curve = tune_threshold(validation, offsets, probabilities)
+        best, curve = tune_threshold(validation, offsets, probabilities, criterion)
         entry = {'epoch': epoch + 1, 'loss': float(np.mean(losses)), **best, 'elapsed_seconds': time.perf_counter() - started}
         history.append(entry)
         print(json.dumps(entry), flush=True)
-        if best['macro_character_f1'] > best_score:
-            best_score = best['macro_character_f1']
+        if best['selection_score'] > best_score:
+            best_score = best['selection_score']
             model.save_pretrained(destination)
             write_json(destination / 'selection.json', {'epoch': epoch + 1, **best, 'threshold_curve': curve})
-        write_json(REPORTS / f'bert-{args.size}-training.json', {'seed': SEED, 'base_model': model_id, 'revision': revision, 'train_examples': len(train), 'train_chunks': len(train_chunks), 'validation_chunks': len(valid_chunks), 'max_length': MAX_LENGTH, 'stride': STRIDE, 'device': str(device), 'batch_size': args.batch_size, 'learning_rate': 1e-4, 'epochs': args.epochs, 'history': history, 'parameters': sum(parameter.numel() for parameter in model.parameters())})
+        write_json(REPORTS / f'bert-{args.size}{suffix}-training.json', {'seed': SEED, 'base_model': model_id, 'revision': revision, 'profile': args.profile, 'selection_criterion': criterion, 'train_examples': len(train), 'train_chunks': len(train_chunks), 'validation_chunks': len(valid_chunks), 'max_length': MAX_LENGTH, 'stride': STRIDE, 'device': str(device), 'batch_size': args.batch_size, 'learning_rate': learning_rate, 'epochs': args.epochs, 'history': history, 'parameters': sum(parameter.numel() for parameter in model.parameters())})
 
 
 if __name__ == '__main__':

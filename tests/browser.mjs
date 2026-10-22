@@ -18,7 +18,7 @@ try {
   assert.equal(requests.some(request => new URL(request.url).pathname.includes('/models/')), false);
   await page.locator('#model-consent').check();
   await page.locator('#load-model').click();
-  await page.waitForFunction(() => !document.querySelector('#run-model').disabled, { timeout: 120000 });
+  await page.waitForFunction(() => !document.querySelector('#run-model').disabled, null, { timeout: 120000 });
   await page.locator('#run-model').click();
   await page.waitForFunction(() => document.querySelector('#model-status').textContent.includes('worker processing'));
   assert.ok((await page.locator('#model-output').innerText()).length > 10);
@@ -28,7 +28,7 @@ try {
   assert.equal(await page.locator('#model-output').innerText(), '');
   await page.locator('#model-choice').selectOption('bert-tiny');
   await page.locator('#load-model').click();
-  await page.waitForFunction(() => !document.querySelector('#run-model').disabled, { timeout: 120000 });
+  await page.waitForFunction(() => !document.querySelector('#run-model').disabled, null, { timeout: 120000 });
   await page.locator('#run-model').click();
   await page.waitForFunction(() => document.querySelector('#model-status').textContent.includes('worker processing'));
   assert.match(await page.locator('#model-status').innerText(), /tokens/);

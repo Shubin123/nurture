@@ -44,6 +44,10 @@ The proposed automatic-filter gate requires at least 99% precision, meaningful r
 
 The extension remains deterministic: it does not silently load models or broaden permissions. Stream preview remains unfiltered. OCR, region tracking, delayed visual overlays and speech filtering are separate, unimplemented workstreams. Text-model evaluation does not demonstrate stream censorship.
 
+## Balanced-data follow-up
+
+A second local experiment adds pinned, human-rated zero-toxicity Civil Comments examples without increasing model architecture sizes. Its native evaluation substantially reduces rated-negative false positives; details, sampling caveats and the measured recall/F1 tradeoff are in [ml/EXPERIMENTS.md](ml/EXPERIMENTS.md) and [the comparison report](docs/reports/balanced-evaluation.json). These candidates are **not deployed yet**: full browser evaluation, diagnostics and efficiency verification remain required before promotion. The automatic-filter gate is still unmet and the overall improvement work remains active.
+
 ## Reproduce
 
 Reference: Apple M4, 24 GiB RAM, Python 3.12 and Node.js. Packages are pinned in `ml/requirements.lock` and `package-lock.json`.

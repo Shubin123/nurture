@@ -1,0 +1,768 @@
+{
+  "dataset_manifest_sha256": "56a8497482bc9d484bf2ca54c4607b728cfdeecddec0f6b45dd0169dd2307c6e",
+  "selection_criterion": "Equal weight of original Toxic Spans validation macro character F1 and rated-non-toxic validation post acceptance; no test selection.",
+  "models": {
+    "linear_original": {
+      "weight_bytes": 65536,
+      "weight_sha256": "3d493f6bfdc9d9ac46795113dd18b8c27f9468b753dcb4c134a1e3a3d12769d3",
+      "validation": {
+        "threshold": 0.3,
+        "combined": {
+          "examples": 2689,
+          "macro_character_f1": 0.8239227990749203,
+          "macro_character_f1_ci95": [
+            0.8110007673041378,
+            0.8370344419177432
+          ],
+          "micro_character_precision": 0.5191312176457349,
+          "micro_character_recall": 0.45238795724232617,
+          "micro_character_precision_ci95": [
+            0.4886584311843512,
+            0.549217752280891
+          ],
+          "micro_character_recall_ci95": [
+            0.4025328839424379,
+            0.5132785754942095
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.48346696012157414,
+          "exact_character_set_match": 0.7616214206024544,
+          "true_positive_characters": 4613,
+          "false_positive_characters": 4273,
+          "false_negative_characters": 5584,
+          "empty_gold_examples": 2043,
+          "empty_gold_examples_flagged": 262,
+          "empty_gold_prediction_rate": 0.1282427802251591,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+        },
+        "original_span_subset": {
+          "examples": 689,
+          "macro_character_f1": 0.6350194582183756,
+          "macro_character_f1_ci95": [
+            0.6062862726166259,
+            0.6641789235413713
+          ],
+          "micro_character_precision": 0.6606043247887727,
+          "micro_character_recall": 0.45238795724232617,
+          "micro_character_precision_ci95": [
+            0.6243338645926304,
+            0.696861938078006
+          ],
+          "micro_character_recall_ci95": [
+            0.4023892405501884,
+            0.5103640559574174
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.5370197904540163,
+          "exact_character_set_match": 0.3918722786647315,
+          "true_positive_characters": 4613,
+          "false_positive_characters": 2370,
+          "false_negative_characters": 5584,
+          "empty_gold_examples": 43,
+          "empty_gold_examples_flagged": 40,
+          "empty_gold_prediction_rate": 0.9302325581395349,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+        },
+        "rated_non_toxic_subset": {
+          "examples": 2000,
+          "macro_character_f1": 0.889,
+          "macro_character_f1_ci95": [
+            0.875,
+            0.9020125
+          ],
+          "micro_character_precision": 0.0,
+          "micro_character_recall": 0.0,
+          "micro_character_precision_ci95": [
+            0.0,
+            0.0
+          ],
+          "micro_character_recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.0,
+          "exact_character_set_match": 0.889,
+          "true_positive_characters": 0,
+          "false_positive_characters": 1903,
+          "false_negative_characters": 0,
+          "empty_gold_examples": 2000,
+          "empty_gold_examples_flagged": 222,
+          "empty_gold_prediction_rate": 0.111,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans.",
+          "post_level_false_positive_rate": 0.111,
+          "post_level_false_positive_rate_wilson_ci95": [
+            0.09797131125099574,
+            0.12552020624220334
+          ],
+          "interpretation": "False positives relative to seven zero-rated Civil Comments post labels. Human ratings and this source are not universal safety truth."
+        }
+      },
+      "test": {
+        "threshold": 0.3,
+        "combined": {
+          "examples": 7000,
+          "macro_character_f1": 0.8109615111695415,
+          "macro_character_f1_ci95": [
+            0.8022093299338596,
+            0.8191565466738557
+          ],
+          "micro_character_precision": 0.41243113214867694,
+          "micro_character_recall": 0.7286311604633628,
+          "micro_character_precision_ci95": [
+            0.3943616309479453,
+            0.43017553560593097
+          ],
+          "micro_character_recall_ci95": [
+            0.6492984315989749,
+            0.7941043904592033
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.5267200158561058,
+          "exact_character_set_match": 0.756,
+          "true_positive_characters": 10630,
+          "false_positive_characters": 15144,
+          "false_negative_characters": 3959,
+          "empty_gold_examples": 5394,
+          "empty_gold_examples_flagged": 966,
+          "empty_gold_prediction_rate": 0.17908787541713014,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+        },
+        "original_span_subset": {
+          "examples": 2000,
+          "macro_character_f1": 0.6418652890933955,
+          "macro_character_f1_ci95": [
+            0.6242771009423908,
+            0.6601421063338042
+          ],
+          "micro_character_precision": 0.5159192389827219,
+          "micro_character_recall": 0.7286311604633628,
+          "micro_character_precision_ci95": [
+            0.4947132803399557,
+            0.5365879303252785
+          ],
+          "micro_character_recall_ci95": [
+            0.6527100966702492,
+            0.7904840527038746
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.604097405734095,
+          "exact_character_set_match": 0.4495,
+          "true_positive_characters": 10630,
+          "false_positive_characters": 9974,
+          "false_negative_characters": 3959,
+          "empty_gold_examples": 394,
+          "empty_gold_examples_flagged": 359,
+          "empty_gold_prediction_rate": 0.9111675126903553,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+        },
+        "rated_non_toxic_subset": {
+          "examples": 5000,
+          "macro_character_f1": 0.8786,
+          "macro_character_f1_ci95": [
+            0.869795,
+            0.8876
+          ],
+          "micro_character_precision": 0.0,
+          "micro_character_recall": 0.0,
+          "micro_character_precision_ci95": [
+            0.0,
+            0.0
+          ],
+          "micro_character_recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.0,
+          "exact_character_set_match": 0.8786,
+          "true_positive_characters": 0,
+          "false_positive_characters": 5170,
+          "false_negative_characters": 0,
+          "empty_gold_examples": 5000,
+          "empty_gold_examples_flagged": 607,
+          "empty_gold_prediction_rate": 0.1214,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans.",
+          "post_level_false_positive_rate": 0.1214,
+          "post_level_false_positive_rate_wilson_ci95": [
+            0.11263681552466555,
+            0.13074450973551052
+          ],
+          "interpretation": "False positives relative to seven zero-rated Civil Comments post labels. Human ratings and this source are not universal safety truth."
+        }
+      }
+    },
+    "linear_balanced": {
+      "weight_bytes": 65536,
+      "weight_sha256": "9fbc32bb1b15de162764ade93bb9fe37ebdfcac776310745300d428178b4daee",
+      "validation": {
+        "threshold": 0.275,
+        "combined": {
+          "examples": 2689,
+          "macro_character_f1": 0.8767709810715473,
+          "macro_character_f1_ci95": [
+            0.8657781517315989,
+            0.8880037651588818
+          ],
+          "micro_character_precision": 0.6606748659728792,
+          "micro_character_recall": 0.41090516818672157,
+          "micro_character_precision_ci95": [
+            0.6260423249272234,
+            0.6963677592270361
+          ],
+          "micro_character_recall_ci95": [
+            0.36411444268958515,
+            0.46635382891441607
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.5066811778221174,
+          "exact_character_set_match": 0.8226106359241354,
+          "true_positive_characters": 4190,
+          "false_positive_characters": 2152,
+          "false_negative_characters": 6007,
+          "empty_gold_examples": 2043,
+          "empty_gold_examples_flagged": 106,
+          "empty_gold_prediction_rate": 0.05188448360254528,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+        },
+        "original_span_subset": {
+          "examples": 689,
+          "macro_character_f1": 0.6177607664751678,
+          "macro_character_f1_ci95": [
+            0.5876431873480887,
+            0.6495981383671167
+          ],
+          "micro_character_precision": 0.7179575051405072,
+          "micro_character_recall": 0.41090516818672157,
+          "micro_character_precision_ci95": [
+            0.681223733950277,
+            0.7535311919621668
+          ],
+          "micro_character_recall_ci95": [
+            0.36158782079834284,
+            0.46812835219936527
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.5226719890226408,
+          "exact_character_set_match": 0.40638606676342526,
+          "true_positive_characters": 4190,
+          "false_positive_characters": 1646,
+          "false_negative_characters": 6007,
+          "empty_gold_examples": 43,
+          "empty_gold_examples_flagged": 38,
+          "empty_gold_prediction_rate": 0.8837209302325582,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+        },
+        "rated_non_toxic_subset": {
+          "examples": 2000,
+          "macro_character_f1": 0.966,
+          "macro_character_f1_ci95": [
+            0.957,
+            0.9735
+          ],
+          "micro_character_precision": 0.0,
+          "micro_character_recall": 0.0,
+          "micro_character_precision_ci95": [
+            0.0,
+            0.0
+          ],
+          "micro_character_recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.0,
+          "exact_character_set_match": 0.966,
+          "true_positive_characters": 0,
+          "false_positive_characters": 506,
+          "false_negative_characters": 0,
+          "empty_gold_examples": 2000,
+          "empty_gold_examples_flagged": 68,
+          "empty_gold_prediction_rate": 0.034,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans.",
+          "post_level_false_positive_rate": 0.034,
+          "post_level_false_positive_rate_wilson_ci95": [
+            0.02690814464608357,
+            0.04287860895759449
+          ],
+          "interpretation": "False positives relative to seven zero-rated Civil Comments post labels. Human ratings and this source are not universal safety truth."
+        }
+      },
+      "test": {
+        "threshold": 0.275,
+        "combined": {
+          "examples": 7000,
+          "macro_character_f1": 0.8710178753835888,
+          "macro_character_f1_ci95": [
+            0.8633962497504254,
+            0.8784603272352196
+          ],
+          "micro_character_precision": 0.5221311475409836,
+          "micro_character_recall": 0.6986085406813353,
+          "micro_character_precision_ci95": [
+            0.49978257045956714,
+            0.5440589762913621
+          ],
+          "micro_character_recall_ci95": [
+            0.6227774747166784,
+            0.7629902942080716
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.5976135330851096,
+          "exact_character_set_match": 0.8248571428571428,
+          "true_positive_characters": 10192,
+          "false_positive_characters": 9328,
+          "false_negative_characters": 4397,
+          "empty_gold_examples": 5394,
+          "empty_gold_examples_flagged": 546,
+          "empty_gold_prediction_rate": 0.10122358175750834,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+        },
+        "original_span_subset": {
+          "examples": 2000,
+          "macro_character_f1": 0.6500625638425609,
+          "macro_character_f1_ci95": [
+            0.6323031631035966,
+            0.6682428037875306
+          ],
+          "micro_character_precision": 0.5662851427936437,
+          "micro_character_recall": 0.6986085406813353,
+          "micro_character_precision_ci95": [
+            0.5442439427956757,
+            0.5882592977921578
+          ],
+          "micro_character_recall_ci95": [
+            0.6271609555762443,
+            0.7605901292826835
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.6255255163101849,
+          "exact_character_set_match": 0.4885,
+          "true_positive_characters": 10192,
+          "false_positive_characters": 7806,
+          "false_negative_characters": 4397,
+          "empty_gold_examples": 394,
+          "empty_gold_examples_flagged": 343,
+          "empty_gold_prediction_rate": 0.8705583756345178,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+        },
+        "rated_non_toxic_subset": {
+          "examples": 5000,
+          "macro_character_f1": 0.9594,
+          "macro_character_f1_ci95": [
+            0.9536,
+            0.9646
+          ],
+          "micro_character_precision": 0.0,
+          "micro_character_recall": 0.0,
+          "micro_character_precision_ci95": [
+            0.0,
+            0.0
+          ],
+          "micro_character_recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.0,
+          "exact_character_set_match": 0.9594,
+          "true_positive_characters": 0,
+          "false_positive_characters": 1522,
+          "false_negative_characters": 0,
+          "empty_gold_examples": 5000,
+          "empty_gold_examples_flagged": 203,
+          "empty_gold_prediction_rate": 0.0406,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans.",
+          "post_level_false_positive_rate": 0.0406,
+          "post_level_false_positive_rate_wilson_ci95": [
+            0.03547284651761458,
+            0.04643254393279457
+          ],
+          "interpretation": "False positives relative to seven zero-rated Civil Comments post labels. Human ratings and this source are not universal safety truth."
+        }
+      }
+    },
+    "mini_original": {
+      "model_bytes": 11351057,
+      "model_sha256": "553e43a9d0366c4b8979212bdeb448d44d9e0022e4f7cf48e318aa4be2768c1d",
+      "validation": {
+        "threshold": 0.4,
+        "combined": {
+          "examples": 2689,
+          "macro_character_f1": 0.738641810162889,
+          "macro_character_f1_ci95": [
+            0.7234982914198482,
+            0.7536771288333056
+          ],
+          "micro_character_precision": 0.4559080459770115,
+          "micro_character_recall": 0.48622143767774834,
+          "micro_character_precision_ci95": [
+            0.42799973262584134,
+            0.48442055095967956
+          ],
+          "micro_character_recall_ci95": [
+            0.4307256462126379,
+            0.5525969016502016
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.47057706909643127,
+          "exact_character_set_match": 0.6649312011900335,
+          "true_positive_characters": 4958,
+          "false_positive_characters": 5917,
+          "false_negative_characters": 5239,
+          "empty_gold_examples": 2043,
+          "empty_gold_examples_flagged": 524,
+          "empty_gold_prediction_rate": 0.2564855604503182,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+        },
+        "original_span_subset": {
+          "examples": 689,
+          "macro_character_f1": 0.6780955406792577,
+          "macro_character_f1_ci95": [
+            0.6517066987396924,
+            0.7055024845257434
+          ],
+          "micro_character_precision": 0.6973277074542897,
+          "micro_character_recall": 0.48622143767774834,
+          "micro_character_precision_ci95": [
+            0.6655140924844994,
+            0.729578664169707
+          ],
+          "micro_character_recall_ci95": [
+            0.4306540376313273,
+            0.5508245384758125
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.572947362338938,
+          "exact_character_set_match": 0.3904208998548621,
+          "true_positive_characters": 4958,
+          "false_positive_characters": 2152,
+          "false_negative_characters": 5239,
+          "empty_gold_examples": 43,
+          "empty_gold_examples_flagged": 43,
+          "empty_gold_prediction_rate": 1.0,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+        },
+        "rated_non_toxic_subset": {
+          "examples": 2000,
+          "macro_character_f1": 0.7595,
+          "macro_character_f1_ci95": [
+            0.7419875,
+            0.7790125
+          ],
+          "micro_character_precision": 0.0,
+          "micro_character_recall": 0.0,
+          "micro_character_precision_ci95": [
+            0.0,
+            0.0
+          ],
+          "micro_character_recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.0,
+          "exact_character_set_match": 0.7595,
+          "true_positive_characters": 0,
+          "false_positive_characters": 3765,
+          "false_negative_characters": 0,
+          "empty_gold_examples": 2000,
+          "empty_gold_examples_flagged": 481,
+          "empty_gold_prediction_rate": 0.2405,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans.",
+          "post_level_false_positive_rate": 0.2405,
+          "post_level_false_positive_rate_wilson_ci95": [
+            0.2222777772775834,
+            0.2597172067570828
+          ],
+          "interpretation": "False positives relative to seven zero-rated Civil Comments post labels. Human ratings and this source are not universal safety truth."
+        }
+      },
+      "test": {
+        "threshold": 0.4,
+        "combined": {
+          "examples": 7000,
+          "macro_character_f1": 0.7314126214063392,
+          "macro_character_f1_ci95": [
+            0.7211110256126565,
+            0.7414322839476143
+          ],
+          "micro_character_precision": 0.3658970976253298,
+          "micro_character_recall": 0.7604359448899856,
+          "micro_character_precision_ci95": [
+            0.34988790453297813,
+            0.3826038849312271
+          ],
+          "micro_character_recall_ci95": [
+            0.6797475717384067,
+            0.8241485743474206
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.49406577746108793,
+          "exact_character_set_match": 0.6685714285714286,
+          "true_positive_characters": 11094,
+          "false_positive_characters": 19226,
+          "false_negative_characters": 3495,
+          "empty_gold_examples": 5394,
+          "empty_gold_examples_flagged": 1575,
+          "empty_gold_prediction_rate": 0.29199110122358174,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+        },
+        "original_span_subset": {
+          "examples": 2000,
+          "macro_character_f1": 0.6609441749221872,
+          "macro_character_f1_ci95": [
+            0.6444906321955471,
+            0.6781962326152021
+          ],
+          "micro_character_precision": 0.5372917473847346,
+          "micro_character_recall": 0.7604359448899856,
+          "micro_character_precision_ci95": [
+            0.5168857427410526,
+            0.5580553510717537
+          ],
+          "micro_character_recall_ci95": [
+            0.685079345593614,
+            0.8249603282893004
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.6296790305644634,
+          "exact_character_set_match": 0.441,
+          "true_positive_characters": 11094,
+          "false_positive_characters": 9554,
+          "false_negative_characters": 3495,
+          "empty_gold_examples": 394,
+          "empty_gold_examples_flagged": 373,
+          "empty_gold_prediction_rate": 0.9467005076142132,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+        },
+        "rated_non_toxic_subset": {
+          "examples": 5000,
+          "macro_character_f1": 0.7596,
+          "macro_character_f1_ci95": [
+            0.7484,
+            0.770205
+          ],
+          "micro_character_precision": 0.0,
+          "micro_character_recall": 0.0,
+          "micro_character_precision_ci95": [
+            0.0,
+            0.0
+          ],
+          "micro_character_recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.0,
+          "exact_character_set_match": 0.7596,
+          "true_positive_characters": 0,
+          "false_positive_characters": 9672,
+          "false_negative_characters": 0,
+          "empty_gold_examples": 5000,
+          "empty_gold_examples_flagged": 1202,
+          "empty_gold_prediction_rate": 0.2404,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans.",
+          "post_level_false_positive_rate": 0.2404,
+          "post_level_false_positive_rate_wilson_ci95": [
+            0.228757290089181,
+            0.25244131539825093
+          ],
+          "interpretation": "False positives relative to seven zero-rated Civil Comments post labels. Human ratings and this source are not universal safety truth."
+        }
+      }
+    },
+    "mini_balanced": {
+      "model_bytes": 11351057,
+      "model_sha256": "ffa249fb1d48994b8470183d873fb40bb96e7090be1e15363fc584603cdf3e6c",
+      "validation": {
+        "threshold": 0.4,
+        "combined": {
+          "examples": 2689,
+          "macro_character_f1": 0.8855884804847656,
+          "macro_character_f1_ci95": [
+            0.8743531029451889,
+            0.8959838999245064
+          ],
+          "micro_character_precision": 0.6653519417475728,
+          "micro_character_recall": 0.4301265077964107,
+          "micro_character_precision_ci95": [
+            0.6317829226454516,
+            0.6982690038775553
+          ],
+          "micro_character_recall_ci95": [
+            0.3809135431462324,
+            0.492909208600698
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.5224849603907321,
+          "exact_character_set_match": 0.8222387504648568,
+          "true_positive_characters": 4386,
+          "false_positive_characters": 2206,
+          "false_negative_characters": 5811,
+          "empty_gold_examples": 2043,
+          "empty_gold_examples_flagged": 87,
+          "empty_gold_prediction_rate": 0.042584434654919234,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+        },
+        "original_span_subset": {
+          "examples": 689,
+          "macro_character_f1": 0.6245971321096296,
+          "macro_character_f1_ci95": [
+            0.5963950358366442,
+            0.656359682001548
+          ],
+          "micro_character_precision": 0.701199040767386,
+          "micro_character_recall": 0.4301265077964107,
+          "micro_character_precision_ci95": [
+            0.666824431743644,
+            0.7382276716496301
+          ],
+          "micro_character_recall_ci95": [
+            0.37917230166143323,
+            0.4905232294513692
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.5331874544128373,
+          "exact_character_set_match": 0.37735849056603776,
+          "true_positive_characters": 4386,
+          "false_positive_characters": 1869,
+          "false_negative_characters": 5811,
+          "empty_gold_examples": 43,
+          "empty_gold_examples_flagged": 38,
+          "empty_gold_prediction_rate": 0.8837209302325582,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+        },
+        "rated_non_toxic_subset": {
+          "examples": 2000,
+          "macro_character_f1": 0.9755,
+          "macro_character_f1_ci95": [
+            0.9685,
+            0.982
+          ],
+          "micro_character_precision": 0.0,
+          "micro_character_recall": 0.0,
+          "micro_character_precision_ci95": [
+            0.0,
+            0.0
+          ],
+          "micro_character_recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.0,
+          "exact_character_set_match": 0.9755,
+          "true_positive_characters": 0,
+          "false_positive_characters": 337,
+          "false_negative_characters": 0,
+          "empty_gold_examples": 2000,
+          "empty_gold_examples_flagged": 49,
+          "empty_gold_prediction_rate": 0.0245,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans.",
+          "post_level_false_positive_rate": 0.0245,
+          "post_level_false_positive_rate_wilson_ci95": [
+            0.01858153622439221,
+            0.032241642613695595
+          ],
+          "interpretation": "False positives relative to seven zero-rated Civil Comments post labels. Human ratings and this source are not universal safety truth."
+        }
+      },
+      "test": {
+        "threshold": 0.4,
+        "combined": {
+          "examples": 7000,
+          "macro_character_f1": 0.8769956877842999,
+          "macro_character_f1_ci95": [
+            0.8699964631014266,
+            0.8845828565164182
+          ],
+          "micro_character_precision": 0.5106588678880456,
+          "micro_character_recall": 0.7241072040578518,
+          "micro_character_precision_ci95": [
+            0.4883557869601364,
+            0.5329581195433001
+          ],
+          "micro_character_recall_ci95": [
+            0.6468244985900926,
+            0.7861447515956529
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.5989341195146842,
+          "exact_character_set_match": 0.8204285714285714,
+          "true_positive_characters": 10564,
+          "false_positive_characters": 10123,
+          "false_negative_characters": 4025,
+          "empty_gold_examples": 5394,
+          "empty_gold_examples_flagged": 495,
+          "empty_gold_prediction_rate": 0.0917686318131257,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+        },
+        "original_span_subset": {
+          "examples": 2000,
+          "macro_character_f1": 0.6474849072450499,
+          "macro_character_f1_ci95": [
+            0.6297483503044302,
+            0.6658773566117909
+          ],
+          "micro_character_precision": 0.5394199346405228,
+          "micro_character_recall": 0.7241072040578518,
+          "micro_character_precision_ci95": [
+            0.5176686135958245,
+            0.5609574677387525
+          ],
+          "micro_character_recall_ci95": [
+            0.6486723059488687,
+            0.7841485323190239
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.6182658824217949,
+          "exact_character_set_match": 0.4495,
+          "true_positive_characters": 10564,
+          "false_positive_characters": 9020,
+          "false_negative_characters": 4025,
+          "empty_gold_examples": 394,
+          "empty_gold_examples_flagged": 339,
+          "empty_gold_prediction_rate": 0.8604060913705583,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+        },
+        "rated_non_toxic_subset": {
+          "examples": 5000,
+          "macro_character_f1": 0.9688,
+          "macro_character_f1_ci95": [
+            0.9638,
+            0.973
+          ],
+          "micro_character_precision": 0.0,
+          "micro_character_recall": 0.0,
+          "micro_character_precision_ci95": [
+            0.0,
+            0.0
+          ],
+          "micro_character_recall_ci95": [
+            0.0,
+            0.0
+          ],
+          "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+          "micro_character_f1": 0.0,
+          "exact_character_set_match": 0.9688,
+          "true_positive_characters": 0,
+          "false_positive_characters": 1103,
+          "false_negative_characters": 0,
+          "empty_gold_examples": 5000,
+          "empty_gold_examples_flagged": 156,
+          "empty_gold_prediction_rate": 0.0312,
+          "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans.",
+          "post_level_false_positive_rate": 0.0312,
+          "post_level_false_positive_rate_wilson_ci95": [
+            0.026729241372423156,
+            0.03639058240457251
+          ],
+          "interpretation": "False positives relative to seven zero-rated Civil Comments post labels. Human ratings and this source are not universal safety truth."
+        }
+      }
+    }
+  },
+  "release_scope": "Candidate research comparison. No automatic-filter production claim.",
+  "benchmark_reuse_note": "The original 2000-comment span test was inspected in the first experiment and is reused for comparison. The 5000 rated-negative test examples are a new frozen control set for this follow-up. Neither test subset selects thresholds."
+}

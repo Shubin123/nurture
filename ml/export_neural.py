@@ -24,16 +24,18 @@ class Export(torch.nn.Module):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--size', choices=['tiny', 'mini'], default='tiny')
+    parser.add_argument('--profile', choices=['original', 'balanced'], default='original')
     args = parser.parse_args()
+    suffix = '-balanced' if args.profile == 'balanced' else ''
     torch.set_num_threads(4)
-    source = RUNS / f'bert-{args.size}'
-    destination = ROOT / 'docs' / 'models' / f'bert-{args.size}'
+    source = RUNS / f'bert-{args.size}{suffix}'
+    destination = (RUNS / 'candidate-models' if args.profile == 'balanced' else ROOT / 'docs' / 'models') / f'bert-{args.size}{suffix}'
     destination.mkdir(parents=True, exist_ok=True)
     model = AutoModelForTokenClassification.from_pretrained(source, attn_implementation='eager').eval()
     wrapper = Export(model).eval()
     ids = torch.tensor([[101] + [2023] * 126 + [102]], dtype=torch.int64)
     mask = torch.ones_like(ids)
-    float_path = RUNS / f'bert-{args.size}-fp32.onnx'
+    float_path = RUNS / f'bert-{args.size}{suffix}-fp32.onnx'
     torch.onnx.export(wrapper, (ids, mask), str(float_path), input_names=['input_ids', 'attention_mask'], output_names=['logits'], dynamic_axes={'input_ids': {0: 'batch', 1: 'sequence'}, 'attention_mask': {0: 'batch', 1: 'sequence'}, 'logits': {0: 'batch', 1: 'sequence'}}, opset_version=17, dynamo=False)
     onnx.checker.check_model(str(float_path))
     quantized_path = destination / 'model.int8.onnx'
@@ -56,8 +58,8 @@ def main():
     floating = float_session.run(None, feed)[0]
     quantized = quantized_session.run(None, feed)[0]
     assert np.max(np.abs(reference - floating)) < 1e-4, 'ONNX export does not match PyTorch.'
-    write_json(REPORTS / f'bert-{args.size}-export.json', {'fp32_bytes': float_path.stat().st_size, 'int8_bytes': quantized_path.stat().st_size, 'int8_sha256': digest(quantized_path), 'torch_onnx_max_abs_logit_difference': float(np.max(np.abs(reference - floating))), 'quantized_max_abs_logit_difference_smoke': float(np.max(np.abs(reference - quantized))), 'quantized_accuracy_requires_full_evaluation': True})
-    print((REPORTS / f'bert-{args.size}-export.json').read_text())
+    write_json(REPORTS / f'bert-{args.size}{suffix}-export.json', {'fp32_bytes': float_path.stat().st_size, 'int8_bytes': quantized_path.stat().st_size, 'int8_sha256': digest(quantized_path), 'torch_onnx_max_abs_logit_difference': float(np.max(np.abs(reference - floating))), 'quantized_max_abs_logit_difference_smoke': float(np.max(np.abs(reference - quantized))), 'quantized_accuracy_requires_full_evaluation': True})
+    print((REPORTS / f'bert-{args.size}{suffix}-export.json').read_text())
 
 
 if __name__ == '__main__':

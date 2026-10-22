@@ -1,0 +1,8 @@
+{
+  "fp32_bytes": 44511093,
+  "int8_bytes": 11351057,
+  "int8_sha256": "ffa249fb1d48994b8470183d873fb40bb96e7090be1e15363fc584603cdf3e6c",
+  "torch_onnx_max_abs_logit_difference": 1.9073486328125e-06,
+  "quantized_max_abs_logit_difference_smoke": 0.07013654708862305,
+  "quantized_accuracy_requires_full_evaluation": true
+}

@@ -1,0 +1,79 @@
+{
+  "seed": 1729,
+  "base_model": "google/bert_uncased_L-4_H-256_A-4",
+  "revision": "387825ce42dbb39b87911cdf8e383ee3b25184f8",
+  "profile": "balanced",
+  "selection_criterion": "balanced_context",
+  "train_examples": 17917,
+  "train_chunks": 20325,
+  "validation_chunks": 3059,
+  "max_length": 128,
+  "stride": 32,
+  "device": "mps",
+  "batch_size": 64,
+  "learning_rate": 5e-05,
+  "epochs": 6,
+  "history": [
+    {
+      "epoch": 1,
+      "loss": 0.17293056398161552,
+      "threshold": 0.65,
+      "macro_character_f1": 0.8685789127246332,
+      "span_subset_macro_f1": 0.5698239424042649,
+      "rated_benign_acceptance": 0.9715,
+      "selection_score": 0.7706619712021325,
+      "elapsed_seconds": 57.922940624994226
+    },
+    {
+      "epoch": 2,
+      "loss": 0.08545052093811005,
+      "threshold": 0.325,
+      "macro_character_f1": 0.8805576513361316,
+      "span_subset_macro_f1": 0.6310878438938429,
+      "rated_benign_acceptance": 0.9665,
+      "selection_score": 0.7987939219469214,
+      "elapsed_seconds": 116.09916612500092
+    },
+    {
+      "epoch": 3,
+      "loss": 0.07599480689134237,
+      "threshold": 0.4,
+      "macro_character_f1": 0.8844493862252197,
+      "span_subset_macro_f1": 0.6259570385480635,
+      "rated_benign_acceptance": 0.9735,
+      "selection_score": 0.7997285192740318,
+      "elapsed_seconds": 176.29348712501815
+    },
+    {
+      "epoch": 4,
+      "loss": 0.067290959364307,
+      "threshold": 0.3,
+      "macro_character_f1": 0.8784186699795201,
+      "span_subset_macro_f1": 0.6387050850144116,
+      "rated_benign_acceptance": 0.961,
+      "selection_score": 0.7998525425072058,
+      "elapsed_seconds": 240.02390258398373
+    },
+    {
+      "epoch": 5,
+      "loss": 0.060149799839083876,
+      "threshold": 0.525,
+      "macro_character_f1": 0.8791818123874264,
+      "span_subset_macro_f1": 0.6286210355729891,
+      "rated_benign_acceptance": 0.9655,
+      "selection_score": 0.7970605177864946,
+      "elapsed_seconds": 297.61444145900896
+    },
+    {
+      "epoch": 6,
+      "loss": 0.055399577839171175,
+      "threshold": 0.55,
+      "macro_character_f1": 0.8837468465447335,
+      "span_subset_macro_f1": 0.6261179540766157,
+      "rated_benign_acceptance": 0.9725,
+      "selection_score": 0.7993089770383079,
+      "elapsed_seconds": 354.99618570902385
+    }
+  ],
+  "parameters": 11105282
+}

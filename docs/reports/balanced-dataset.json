@@ -1,0 +1,109 @@
+{
+  "status": "Prepared for next training experiment; not used by the currently deployed models.",
+  "original_dataset": {
+    "dataset": "SemEval-2021 Task 5 Toxic Spans",
+    "source": "https://github.com/ipavlopoulos/toxic_spans",
+    "revision": "beaf170538df8275c3447b2e26070f2f82e55272",
+    "license": "CC0-1.0",
+    "license_sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499",
+    "raw_files": {
+      "tsd_train.csv": {
+        "sha256": "b538ea2d64ed7c306ff8f010a25a5286bef6ce61d469042482ba64efc1ddd6cd",
+        "bytes": 2281497
+      },
+      "tsd_trial.csv": {
+        "sha256": "6bb8e9a16470c0269ac8727fd8bb77df68d8fb27955d9f5ff29ad724505622e8",
+        "bytes": 185506
+      },
+      "tsd_test.csv": {
+        "sha256": "74f4dd086667fdad6198539ff9201d1f25f3a94c5169da1e7643a949974bf6b8",
+        "bytes": 445951
+      }
+    },
+    "splits": {
+      "test": {
+        "examples": 2000,
+        "dropped_duplicate": 0,
+        "sha256": "c8b14a96c9d837b4bb5aeadb78543b5c305c4ecbae09188c747b813195c94b9f"
+      },
+      "validation": {
+        "examples": 689,
+        "dropped_duplicate": 1,
+        "sha256": "f8eb27b41a362858d52cb818a8cf4945a9c9a1a706c558b0bdc8a339642d0f7b"
+      },
+      "train": {
+        "examples": 7917,
+        "dropped_duplicate": 22,
+        "sha256": "a7f60f53368ff701dcd07c9db9b2fb6b796ea204ddd5ca731aaa2dff14f1e863"
+      }
+    },
+    "validation_source": "official trial set",
+    "deduplication": "Lowercase and whitespace-normalized SHA-256; test then validation then train priority. No labels used for deduplication.",
+    "limitations": [
+      "No author identifiers; author/source-disjoint evaluation cannot be established.",
+      "Toxic comment domain, not representative of general browsing.",
+      "Rater spans are subjective; no guarantee of contextual safety or dialect fairness."
+    ]
+  },
+  "additional_source": "google/civil_comments",
+  "revision": "f2970eb3a55777454c94069077cc8d9b5866312d",
+  "license": "CC0-1.0",
+  "sampling": "Lowest normalized text SHA-256 among 20–4000-character posts with all seven human-rated toxicity sub-scores exactly zero. Only the first official train shard is sampled. Existing Toxic Spans rows and selected cross-split duplicates are excluded.",
+  "limitations": [
+    "Whole-post negative labels are inferred from human-rated zero scores, not independently annotated character spans.",
+    "Human ratings and sampling can be biased; this is not universal safety ground truth.",
+    "Author-disjointness is not established."
+  ],
+  "splits": {
+    "test": {
+      "examples": 7000,
+      "sha256": "2c3f9ccc22b0c94889e2b97a8eb07ab55ef86ebd5a96dc9b85e1668258a93665"
+    },
+    "test-benign": {
+      "examples": 5000,
+      "sha256": "568638df301e207bf3307a0178df0463fbf2f396c568c85e46fc9dfeadad2d6b"
+    },
+    "validation": {
+      "examples": 2689,
+      "sha256": "47b7f7cee0a53ea15aa46e8ae3ca423d68647e712f50c959e1a68c082450bc6c"
+    },
+    "validation-benign": {
+      "examples": 2000,
+      "sha256": "2d8a997ac2ea3396a75c3b84ec6a0a0d32ac8d831d459447dc267a5dc41f158f"
+    },
+    "train": {
+      "examples": 17917,
+      "sha256": "e8e63fca5e83c1fa889b06a913fd69a6c707f7295135ecac4b8359c62da9cca2"
+    },
+    "train-benign": {
+      "examples": 10000,
+      "sha256": "eb70e61084f2424c13f64b5dc44b76043c45bb9cb5824c856fc8a4db16ca09c8"
+    }
+  },
+  "files": {
+    "test": {
+      "filename": "test-00000-of-00001.parquet",
+      "sha256": "410f803ff161e7c4ba005db7de5b444cac413f4861bf056b0fd69d670d75aa08",
+      "bytes": 20800265,
+      "rows_scanned": 97320,
+      "eligible_before_reservoir": 65046,
+      "selected": 5000
+    },
+    "validation": {
+      "filename": "validation-00000-of-00001.parquet",
+      "sha256": "2e0eb65474e7e1290df8689fc93eea783160c898c09ae15382c0a9662367bd03",
+      "bytes": 20955569,
+      "rows_scanned": 97320,
+      "eligible_before_reservoir": 65533,
+      "selected": 2000
+    },
+    "train": {
+      "filename": "train-00000-of-00002.parquet",
+      "sha256": "c20f01c3aecbdd942886cacb0ee67e995df33bc712a622fde75927ed3d6ccefe",
+      "bytes": 193527147,
+      "rows_scanned": 902437,
+      "eligible_before_reservoir": 607059,
+      "selected": 10000
+    }
+  }
+}

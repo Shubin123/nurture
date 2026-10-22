@@ -6,6 +6,7 @@ Consent-first blue-team prototype for local English word replacement. Each chang
 - **Extension:** [installation instructions](extension/README.md) — explicitly enable replacements on an authorized current tab, with stop/restore controls.
 - **Models:** [MODEL.md](MODEL.md) — trained character-context, BERT Tiny and BERT Mini candidates with INT8 exports, full browser evaluation and throughput measurements. They remain opt-in review tools: automatic-filter precision gates are not met.
 - **Results:** [measured comparisons](docs/reports/RESULTS.md), [held-out browser evaluation](docs/reports/browser-evaluation.json) and [browser throughput](docs/reports/browser-benchmark.json).
+- **Active improvement experiment:** [balanced-data follow-up](ml/EXPERIMENTS.md) reduces rated-negative false positives in native evaluation. Candidate weights remain local until browser validation and efficiency checks finish.
 - **Plan:** [PLAN.md](PLAN.md) — milestones and trust boundaries. The earlier software-protection proposal is preserved in [PROTECTION.md](PROTECTION.md).
 
 ## Development

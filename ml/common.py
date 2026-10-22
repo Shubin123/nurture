@@ -14,7 +14,11 @@ TOKEN_PATTERN = re.compile(r"[A-Za-z]+(?:'[A-Za-z]+)?|[^\s]", re.UNICODE)
 
 
 def digest(path):
-    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    result = hashlib.sha256()
+    with Path(path).open('rb') as source:
+        for block in iter(lambda: source.read(1024 * 1024), b''):
+            result.update(block)
+    return result.hexdigest()
 
 
 def write_json(path, value):
@@ -23,9 +27,11 @@ def write_json(path, value):
     path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + '\n')
 
 
-def load_split(split):
-    path = DATA / f'{split}.jsonl'
-    manifest = json.loads((REPORTS / 'dataset.json').read_text())
+def load_split(split, profile='original'):
+    if profile not in ('original', 'balanced'):
+        raise ValueError('Unknown dataset profile.')
+    path = DATA / ('balanced' if profile == 'balanced' else '') / f'{split}.jsonl'
+    manifest = json.loads((REPORTS / ('balanced-dataset.json' if profile == 'balanced' else 'dataset.json')).read_text())
     if digest(path) != manifest['splits'][split]['sha256']:
         raise ValueError(f'Dataset checksum mismatch for {split}; run prepare.py from verified source files.')
     return [json.loads(line) for line in path.read_text().splitlines()]
@@ -110,7 +116,9 @@ def predict_characters(offsets, probabilities, threshold):
     return sorted(predicted)
 
 
-def tune_threshold(rows, offsets, probabilities):
+def tune_threshold(rows, offsets, probabilities, criterion='macro_character_f1'):
+    if criterion not in ('macro_character_f1', 'balanced_context'):
+        raise ValueError('Unknown threshold-selection criterion.')
     results = []
     for threshold in np.arange(0.10, 0.96, 0.025):
         predictions = [predict_characters(span, score, threshold) for span, score in zip(offsets, probabilities)]
@@ -118,6 +126,17 @@ def tune_threshold(rows, offsets, probabilities):
         for row, prediction in zip(rows, predictions):
             gold, predicted = set(row['spans']), set(prediction)
             scores.append(2 * len(gold & predicted) / (len(gold) + len(predicted)) if gold or predicted else 1.0)
-        results.append({'threshold': round(float(threshold), 3), 'macro_character_f1': float(np.mean(scores))})
-    best = max(results, key=lambda item: (item['macro_character_f1'], item['threshold']))
+        entry = {'threshold': round(float(threshold), 3), 'macro_character_f1': float(np.mean(scores))}
+        if criterion == 'balanced_context':
+            span_scores = [score for row, score in zip(rows, scores) if row.get('source') != 'Civil Comments zero-rated negative']
+            benign_scores = [score for row, score in zip(rows, scores) if row.get('source') == 'Civil Comments zero-rated negative']
+            if not span_scores or not benign_scores:
+                raise ValueError('Balanced-context selection requires both original span and rated-benign validation examples.')
+            entry['span_subset_macro_f1'] = float(np.mean(span_scores))
+            entry['rated_benign_acceptance'] = float(np.mean(benign_scores))
+            entry['selection_score'] = (entry['span_subset_macro_f1'] + entry['rated_benign_acceptance']) / 2
+        else:
+            entry['selection_score'] = entry['macro_character_f1']
+        results.append(entry)
+    best = max(results, key=lambda item: (item['selection_score'], item['threshold']))
     return best, results

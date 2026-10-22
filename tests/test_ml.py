@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'ml'))
-from common import character_metrics, features, fnv, load_split, predict_characters, token_spans
+from common import character_metrics, features, fnv, load_split, predict_characters, token_spans, tune_threshold
 
 
 class MetricsTests(unittest.TestCase):
@@ -34,6 +34,31 @@ class MetricsTests(unittest.TestCase):
         for index, left in enumerate(identifiers):
             for right in identifiers[index + 1:]:
                 self.assertFalse(left & right)
+
+    def test_balanced_selection_uses_equal_subset_weight_not_raw_counts(self):
+        rows = [{'spans': [0]}] + [{'spans': [], 'source': 'Civil Comments zero-rated negative'} for _ in range(20)]
+        offsets = [[(0, 1)]] * len(rows)
+        probabilities = [[0.9]] + [[0.1]] * 20
+        best, _ = tune_threshold(rows, offsets, probabilities, 'balanced_context')
+        self.assertEqual(best['selection_score'], 1)
+        self.assertEqual(best['span_subset_macro_f1'], 1)
+        self.assertEqual(best['rated_benign_acceptance'], 1)
+
+    @unittest.skipUnless((Path(__file__).resolve().parents[1] / 'ml/data/balanced/train.jsonl').exists(), 'Supplemental balanced dataset not prepared')
+    def test_balanced_data_remains_disjoint_and_preserves_original_splits(self):
+        original = {name: load_split(name) for name in ('train', 'validation', 'test')}
+        balanced = {name: load_split(name, 'balanced') for name in original}
+        original_keys = {row['sha256_normalized'] for rows in original.values() for row in rows}
+        keys = {name: {row['sha256_normalized'] for row in rows} for name, rows in balanced.items()}
+        self.assertFalse(keys['train'] & keys['validation'])
+        self.assertFalse(keys['train'] & keys['test'])
+        self.assertFalse(keys['validation'] & keys['test'])
+        for name, rows in balanced.items():
+            self.assertTrue({row['id'] for row in original[name]}.issubset({row['id'] for row in rows}))
+            for row in rows:
+                if row.get('source') == 'Civil Comments zero-rated negative':
+                    self.assertNotIn(row['sha256_normalized'], original_keys)
+                    self.assertEqual(row['spans'], [])
 
 
 if __name__ == '__main__':

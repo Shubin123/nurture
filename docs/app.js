@@ -28,7 +28,7 @@ function render() {
       }
     }
     output.replaceChildren(fragment);
-    filterStatus.textContent = `${count} replacement${count === 1 ? '' : 's'}. English whole-word rules; no model is loaded.`;
+    filterStatus.textContent = `${count} replacement${count === 1 ? '' : 's'}. English whole-word rules; this demo does not use a model.`;
   } catch (error) {
     output.replaceChildren();
     filterStatus.textContent = error.message;
