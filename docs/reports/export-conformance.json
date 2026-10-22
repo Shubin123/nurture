@@ -1,0 +1,42 @@
+{
+  "tiny": [
+    {
+      "batch": 1,
+      "sequence": 17,
+      "mixed_padding": true,
+      "max_abs_logit_difference": 9.5367431640625e-07
+    },
+    {
+      "batch": 3,
+      "sequence": 128,
+      "mixed_padding": true,
+      "max_abs_logit_difference": 2.6226043701171875e-06
+    },
+    {
+      "batch": 8,
+      "sequence": 128,
+      "mixed_padding": true,
+      "max_abs_logit_difference": 2.086162567138672e-06
+    }
+  ],
+  "mini": [
+    {
+      "batch": 1,
+      "sequence": 17,
+      "mixed_padding": true,
+      "max_abs_logit_difference": 1.5497207641601562e-06
+    },
+    {
+      "batch": 3,
+      "sequence": 128,
+      "mixed_padding": true,
+      "max_abs_logit_difference": 3.0994415283203125e-06
+    },
+    {
+      "batch": 8,
+      "sequence": 128,
+      "mixed_padding": true,
+      "max_abs_logit_difference": 2.86102294921875e-06
+    }
+  ]
+}

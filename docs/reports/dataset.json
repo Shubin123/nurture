@@ -1,0 +1,45 @@
+{
+  "dataset": "SemEval-2021 Task 5 Toxic Spans",
+  "source": "https://github.com/ipavlopoulos/toxic_spans",
+  "revision": "beaf170538df8275c3447b2e26070f2f82e55272",
+  "license": "CC0-1.0",
+  "license_sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499",
+  "raw_files": {
+    "tsd_train.csv": {
+      "sha256": "b538ea2d64ed7c306ff8f010a25a5286bef6ce61d469042482ba64efc1ddd6cd",
+      "bytes": 2281497
+    },
+    "tsd_trial.csv": {
+      "sha256": "6bb8e9a16470c0269ac8727fd8bb77df68d8fb27955d9f5ff29ad724505622e8",
+      "bytes": 185506
+    },
+    "tsd_test.csv": {
+      "sha256": "74f4dd086667fdad6198539ff9201d1f25f3a94c5169da1e7643a949974bf6b8",
+      "bytes": 445951
+    }
+  },
+  "splits": {
+    "test": {
+      "examples": 2000,
+      "dropped_duplicate": 0,
+      "sha256": "c8b14a96c9d837b4bb5aeadb78543b5c305c4ecbae09188c747b813195c94b9f"
+    },
+    "validation": {
+      "examples": 689,
+      "dropped_duplicate": 1,
+      "sha256": "f8eb27b41a362858d52cb818a8cf4945a9c9a1a706c558b0bdc8a339642d0f7b"
+    },
+    "train": {
+      "examples": 7917,
+      "dropped_duplicate": 22,
+      "sha256": "a7f60f53368ff701dcd07c9db9b2fb6b796ea204ddd5ca731aaa2dff14f1e863"
+    }
+  },
+  "validation_source": "official trial set",
+  "deduplication": "Lowercase and whitespace-normalized SHA-256; test then validation then train priority. No labels used for deduplication.",
+  "limitations": [
+    "No author identifiers; author/source-disjoint evaluation cannot be established.",
+    "Toxic comment domain, not representative of general browsing.",
+    "Rater spans are subjective; no guarantee of contextual safety or dialect fairness."
+  ]
+}

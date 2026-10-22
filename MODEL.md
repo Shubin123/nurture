@@ -1,58 +1,85 @@
-# English browser model: training and evaluation plan
+# Nurture English models · trained research release
 
-Status: proposed, no trained model, dataset or performance results yet.
+Three candidates are trained, exported and evaluated locally, and available in the website's explicit-download model lab. This is **not an autonomous safety-filter release**: precision and independently validated benign-false-positive gates remain unmet. No private tabs, streams or customer content were used for training.
 
-## Goal
+## Candidates
 
-Help a consenting user identify English text spans they choose to soften, on their own authorized browsing surface. Keep transformations explicit: a deterministic replacement from the user's approved lexicon, followed by a small `*`. Never let a generative model silently rewrite surrounding meaning. A visual stream is not page text: OCR and audio recognition are separate systems.
+| Model | Training | Quantized artifact | Role |
+| --- | --- | --- | --- |
+| Character-context logistic regression | Word, neighboring word, word-pair and character 2–4 gram features hashed into 65,536 dimensions; three regularization candidates selected on validation | 65,536 signed INT8 weights plus scale/bias | Fastest default; pure JavaScript inference |
+| BERT Tiny | Google 2-layer/128-hidden encoder, 4,369,666 parameters; eight epochs, best validation checkpoint at epoch 4 | 4,488,172-byte ONNX | Compact comparison; not an accuracy upgrade over the character model |
+| BERT Mini | Google 4-layer/256-hidden encoder, 11,105,282 parameters; eight epochs, best validation checkpoint at epoch 2 | 11,351,057-byte ONNX | Modest contextual benchmark improvement at greater compute cost |
 
-## Baseline first
+Neural models use binary subword span labels (`O` / `TOXIC`), not generative rewriting. A subword is positive when at least half its covered characters are annotated toxic. AdamW uses learning rate 0.0001, weight decay 0.01, batch size 64, 10% warmup and gradient clipping at 1.0. Training uses seed 1729 and the local M4 MPS backend; floating-point kernels may not be bitwise reproducible across platforms.
 
-The included whole-word engine is the reproducible, zero-model baseline. It supports user-defined English terms, case-insensitive matching and visible replacement markers. It does not detect context, inflections, obfuscation, speech or text rendered in images. Log no page text. Maintain explicit regression fixtures rather than collecting shared streams.
+Training, evaluation and serving use 128-position chunks with 32-WordPiece overlap and average overlapping subword scores. No tail is silently truncated. Checkpoints and thresholds use validation only, with thresholds reselected independently after quantization and frozen before held-out evaluation: 0.30 (character), 0.425 (Tiny INT8), 0.40 (Mini INT8).
 
-## Data and consent
+## Data
 
-- Define the categories with the user before selecting data; there is no universal implicit censorship policy. Start with a narrow English vocabulary and distinguish criticism, quoted language and targeted abuse.
-- Use licensed or purpose-written examples. Record provenance and reuse permission. No scraping private tabs, collecting account identifiers or training on screen captures by default.
-- Annotate exact spans, category, context and whether replacement is appropriate. Use two annotators plus adjudication; measure agreement. Keep benign near-matches, negations, quotation, dialect variation and reclaimed language in the evaluation set.
-- Split by source and author before augmentation; deduplicate across train, validation and held-out test sets. Keep an additional adversarial set. Redact personal information and document deletion procedures before collection.
+Pinned upstream **SemEval-2021 Task 5 Toxic Spans**, CC0. After lowercase/whitespace-normalized exact deduplication: **7,917 train**, **689 validation** (official trial), **2,000 test**. Test takes deduplication priority over validation and train, without label-based decisions. Source revision, hashes, dropped counts and split checksums are in `docs/reports/dataset.json`. Raw data stays in ignored `ml/data/`, not on Pages.
 
-## Candidate and training procedure
+This is toxic-comment-domain span annotation, not representative English browsing. **Empty gold spans are not benign labels**: an entire toxic comment can have no attributable span. Author IDs are absent, so author/source-disjoint evaluation cannot be verified. Exact deduplication does not establish semantic or near-duplicate independence. Dialect fairness and production false-positive rates are not established.
 
-1. Version an annotation schema and dataset manifest with hashes, licenses and split membership. Do not publish sensitive source text into this public repository.
-2. Select a license-compatible compact English encoder with a span-labeling head (BIO labels), compared against both the included dictionary and a lightweight character-based baseline. Do not choose by model size alone.
-3. Fine-tune on consented examples with fixed seeds and recorded hyperparameters. Tune thresholds only on validation data. Use per-category precision/recall and exact-span F1, including benign and dialect slices. Reject ambiguous predictions or let the user review them rather than silently changing meaning.
-4. For accepted spans, apply only explicit user-approved replacements. Preserve punctuation and attach a marker. If a contextual model flags a span without an approved substitute, show a review suggestion rather than inventing one.
-5. Export the candidate to a browser-compatible runtime format. Evaluate quantization against unquantized accuracy; test CPU/WASM fallback and optional WebGPU. Pin runtime/model versions and hashes before release. Model downloads need clear consent, size disclosure and no tab-text upload.
-6. Ship only if the candidate materially improves held-out performance over rules while meeting measured browser constraints. Otherwise keep the deterministic baseline and publish the failed experiment honestly.
+The purpose-written `ml/challenge.json` separately probes benign language, identity mentions, quotation/negation and direct insults. It is not training or threshold-selection data. Its single-author provisional labels are not independently adjudicated or a representative benchmark. Predictions are in `docs/reports/challenge.json`; this diagnostic does not establish a production benign false-positive rate.
 
-## Proposed acceptance targets—not measured claims
+## Evidence
 
-| Measure | Initial release gate |
-| --- | --- |
-| Automatic replacement precision | At least 99% on held-out approved categories; report confidence intervals and sample counts |
-| Benign-example false positive rate | At most 0.5%, with slice breakdowns; abstain where data is insufficient |
-| Recall | Report overall and per category; agree thresholds before the pilot, no promise of complete censorship |
-| Warm inference | p95 at most 100 ms per 128-token chunk on named reference desktop hardware |
-| Model download | At most 30 MB compressed as an initial engineering budget |
-| Peak additional memory | At most 150 MB on the measured reference browsers |
-| UI responsiveness | Run inference off the main thread; measure long tasks and time to interactive |
-| Cold start / compatibility | Report download, initialization, unsupported-browser behavior and CPU fallback separately |
+See [measured results](docs/reports/RESULTS.md), [native evaluation](docs/reports/evaluation.json), [full browser evaluation](docs/reports/browser-evaluation.json) and [browser benchmarks](docs/reports/browser-benchmark.json). All 2,000 held-out comments run through the actual served browser worker, not just a Python surrogate.
 
-Publish model card, licenses, dataset summary, evaluation script, reference hardware, browser versions, accuracy/latency results and known failures. These targets require revision if the evidence does not support them; there is no current claim that any candidate meets them.
+Reports distinguish macro per-document character F1, micro character precision/recall, exact character-set agreement, empty-gold prediction rates and length slices. Confidence intervals bootstrap whole documents 1,000 times rather than treating dependent characters as independent samples. They describe this dataset, not deployment guarantees. Expanding subwords to displayed whole words has separate metrics; it cannot silently inherit subword accuracy.
 
-## Stream workstream
+Speed reports name hardware, OS, browser/runtime versions, thread count, warmups and repetitions. Warm workloads cover 126, 128 and 1,024 useful input tokens, excluding overlap and padding from throughput. Actual variable-length held-out throughput is separate. Native inference-only and browser end-to-end processing are not interchangeable; localhost initialization is not Internet download performance. Repeated timing sentences are not an accuracy test.
 
-The site currently requests a user-selected display stream with audio disabled and previews it locally. It neither records nor analyzes it. Browser permission is required each time; the user can stop with the app control or browser control. No access to another user's tabs is implied. Their private content requires their own authorization and a separate sharing mechanism.
+## Efficiency
 
-For visual censorship, prototype downsampled OCR in a worker, timestamped bounding boxes, a delayed processed canvas and explicit overlays. Measure OCR misses, tracking jitter, frame processing latency and CPU/battery use on licensed English test clips. Do not call the preview censored until a separate evaluation shows the overlays actually cover the intended regions. No protection against first-frame leaks can be promised without a measured buffer.
+- INT8 MatMul and embedding/Gather weights reduce neural files roughly fourfold; quantized accuracy is independently evaluated. Smaller is not uniformly faster on native CPU, and no universal speedup is claimed.
+- Share one vocabulary and pinned, self-hosted WASM runtime. The character model does not initialize WASM. No inference text is uploaded.
+- Run off the main thread with a fixed 128-position sequence dimension, bounded batches of eight and single-thread CPU/WASM. No GPU or cross-origin isolation is required. Batch sweeps are published; small noisy differences are not advertised as wins.
+- Bound inputs to 50,000 characters and handle all chunks. Stop/unload terminates the worker and clears its output. Explicit model consent is revocable; public weights may remain in normal browser caches.
+- The 150 MB additional-memory target is **not proven**. Whole-Chrome RSS sampling is a noisy process-tree proxy, not per-model allocation. Runtime overhead exceeds weight size; no mobile-memory claim is made.
 
-For speech, a later explicit audio opt-in would require a local recognizer, word timing, buffering and muted/bleeped output. Audio capture is browser/platform dependent. Do not play raw audio alongside a claimed filtered output. Keep this out of the initial milestone.
+## Release gates
 
-## Technical references
+The proposed automatic-filter gate requires at least 99% precision, meaningful recall, independently low benign false positives and bounded performance. These candidates **do not pass**. They remain opt-in review tools, not child-safety guarantees or substitutes for platform moderation. Unknown candidates are highlighted for review. Only the user's explicit lexicon supplies replacement words, marked `*`. Model scores are not calibrated harm probabilities.
 
-- Screen Capture API: https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia
-- Temporary extension permission: https://developer.chrome.com/docs/extensions/develop/concepts/activeTab
-- Browser inference and WebGPU: https://huggingface.co/docs/transformers.js/guides/webgpu
+The extension remains deterministic: it does not silently load models or broaden permissions. Stream preview remains unfiltered. OCR, region tracking, delayed visual overlays and speech filtering are separate, unimplemented workstreams. Text-model evaluation does not demonstrate stream censorship.
 
-Recheck supported runtimes and browser behavior at implementation time. The model work is a roadmap, not completed training.
+## Reproduce
+
+Reference: Apple M4, 24 GiB RAM, Python 3.12 and Node.js. Packages are pinned in `ml/requirements.lock` and `package-lock.json`.
+
+```sh
+uv venv --python python3.12 .venv
+uv pip install --python .venv/bin/python -r ml/requirements.lock
+npm ci
+sh scripts/train-models.sh
+```
+
+This downloads pinned public revisions, verifies dataset hashes, trains all candidates, selects on validation, exports, checks PyTorch/ONNX parity, evaluates FP32/INT8, checks tokenization and runs unit tests. No paid cloud jobs are launched. The dataset contains offensive language. MPS is preferred when available, otherwise CPU is used.
+
+Serve `docs/` in another terminal with `python3 -m http.server 8000 --directory docs`. Set `CHROME_PATH` for a non-default Chrome location. Stop other heavy jobs; run measurements sequentially:
+
+```sh
+npm run build
+npm run test:browser
+node scripts/benchmark-browser.mjs
+node scripts/evaluate-browser.mjs
+.venv/bin/python ml/report_browser.py
+node scripts/evaluate-challenge.mjs
+node scripts/manifest-models.mjs
+.venv/bin/python ml/render_report.py
+```
+
+Browser tests use real CPU/WASM inference; capture denial is mocked, not cross-platform real-capture evidence. Tokenizer conformance covers token IDs, Unicode offsets and hashed features on 695 validation/diagnostic fixtures. Export checks compare FP32 ONNX against PyTorch; full quantized accuracy is evaluated separately.
+
+Pages publishes committed artifacts from `main` → `/docs`, without a custom Actions workflow. Artifact hashes are in `docs/reports/artifacts.json`. No claim of signed model releases is made.
+
+## Upstream sources and licenses
+
+- Dataset: https://github.com/ipavlopoulos/toxic_spans — pinned SemEval-2021 subset. See the ACL2022 README for empty-span interpretation.
+- Tiny: https://huggingface.co/google/bert_uncased_L-2_H-128_A-2
+- Mini: https://huggingface.co/google/bert_uncased_L-4_H-256_A-4
+- Quantization: https://onnxruntime.ai/docs/performance/model-optimizations/quantization.html
+- Browser runtime: https://onnxruntime.ai/docs/tutorials/web/env-flags-and-session-options.html
+
+BERT-derived weights retain upstream Apache-2.0; ONNX Runtime is MIT; the dataset is CC0. Notices and full upstream licenses are in `licenses/`; these do not assign a new project-wide license.

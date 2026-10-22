@@ -1,0 +1,218 @@
+{
+  "worker_sha256": "221fb7bf42b8dba3d5582f76f02d383c1c108792a5576d40618563fb3a44ff6f",
+  "browser": "155.0.8059.85",
+  "held_out_examples": 2000,
+  "runtime": "ONNX Runtime Web single-thread WASM + JavaScript baseline",
+  "models": {
+    "linear": {
+      "threshold": 0.3,
+      "subword_character_metrics": {
+        "examples": 2000,
+        "macro_character_f1": 0.6418652890933955,
+        "macro_character_f1_ci95": [
+          0.6242771009423908,
+          0.6601421063338042
+        ],
+        "micro_character_precision": 0.5159192389827219,
+        "micro_character_recall": 0.7286311604633628,
+        "micro_character_precision_ci95": [
+          0.4947132803399557,
+          0.5365879303252785
+        ],
+        "micro_character_recall_ci95": [
+          0.6527100966702492,
+          0.7904840527038746
+        ],
+        "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+        "micro_character_f1": 0.604097405734095,
+        "exact_character_set_match": 0.4495,
+        "true_positive_characters": 10630,
+        "false_positive_characters": 9974,
+        "false_negative_characters": 3959,
+        "empty_gold_examples": 394,
+        "empty_gold_examples_flagged": 359,
+        "empty_gold_prediction_rate": 0.9111675126903553,
+        "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+      },
+      "display_whole_word_metrics": {
+        "examples": 2000,
+        "macro_character_f1": 0.6418652890933955,
+        "macro_character_f1_ci95": [
+          0.6242771009423908,
+          0.6601421063338042
+        ],
+        "micro_character_precision": 0.5159192389827219,
+        "micro_character_recall": 0.7286311604633628,
+        "micro_character_precision_ci95": [
+          0.4947132803399557,
+          0.5365879303252785
+        ],
+        "micro_character_recall_ci95": [
+          0.6527100966702492,
+          0.7904840527038746
+        ],
+        "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+        "micro_character_f1": 0.604097405734095,
+        "exact_character_set_match": 0.4495,
+        "true_positive_characters": 10630,
+        "false_positive_characters": 9974,
+        "false_negative_characters": 3959,
+        "empty_gold_examples": 394,
+        "empty_gold_examples_flagged": 359,
+        "empty_gold_prediction_rate": 0.9111675126903553,
+        "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+      },
+      "native_macro_character_f1": 0.6418652890933955,
+      "browser_minus_native_macro_f1": 0.0,
+      "held_out_worker_processing": {
+        "total_useful_tokens": 78260,
+        "total_processing_ms": 679.4000015854836,
+        "useful_tokens_per_second": 115189.87314890839,
+        "per_document_p50_ms": 0.25,
+        "per_document_p95_ms": 1.0,
+        "scope": "Actual held-out comments with variable lengths, no warmup, separate from fixed-size warm latency benchmark."
+      },
+      "note": "Browser inference batches overlapping chunks within a document. Native evaluation batches chunks across documents. Dynamic quantization can produce small differences. Display merges contiguous subwords using maximum score; its accuracy is reported separately."
+    },
+    "bert-tiny": {
+      "threshold": 0.425,
+      "subword_character_metrics": {
+        "examples": 2000,
+        "macro_character_f1": 0.6399394512489817,
+        "macro_character_f1_ci95": [
+          0.622155978311797,
+          0.6580372397063396
+        ],
+        "micro_character_precision": 0.5402733202194844,
+        "micro_character_recall": 0.7154020152169442,
+        "micro_character_precision_ci95": [
+          0.5203113845612624,
+          0.5603938891419594
+        ],
+        "micro_character_recall_ci95": [
+          0.6420767731104856,
+          0.7763192654765355
+        ],
+        "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+        "micro_character_f1": 0.61562509216386,
+        "exact_character_set_match": 0.4235,
+        "true_positive_characters": 10437,
+        "false_positive_characters": 8881,
+        "false_negative_characters": 4152,
+        "empty_gold_examples": 394,
+        "empty_gold_examples_flagged": 347,
+        "empty_gold_prediction_rate": 0.8807106598984772,
+        "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+      },
+      "display_whole_word_metrics": {
+        "examples": 2000,
+        "macro_character_f1": 0.6390791875604097,
+        "macro_character_f1_ci95": [
+          0.6210077226978403,
+          0.6575165899211066
+        ],
+        "micro_character_precision": 0.5247666551434639,
+        "micro_character_recall": 0.7283569812872712,
+        "micro_character_precision_ci95": [
+          0.5039585482523581,
+          0.5444216142052486
+        ],
+        "micro_character_recall_ci95": [
+          0.6560616218357803,
+          0.7901091014830446
+        ],
+        "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+        "micro_character_f1": 0.610023537516505,
+        "exact_character_set_match": 0.4345,
+        "true_positive_characters": 10626,
+        "false_positive_characters": 9623,
+        "false_negative_characters": 3963,
+        "empty_gold_examples": 394,
+        "empty_gold_examples_flagged": 347,
+        "empty_gold_prediction_rate": 0.8807106598984772,
+        "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+      },
+      "native_macro_character_f1": 0.6418810204631231,
+      "browser_minus_native_macro_f1": -0.0019415692141414587,
+      "held_out_worker_processing": {
+        "total_useful_tokens": 86238,
+        "total_processing_ms": 6886.699999988079,
+        "useful_tokens_per_second": 12522.398245915936,
+        "per_document_p50_ms": 3.300000011920929,
+        "per_document_p95_ms": 4.195000022649679,
+        "scope": "Actual held-out comments with variable lengths, no warmup, separate from fixed-size warm latency benchmark."
+      },
+      "note": "Browser inference batches overlapping chunks within a document. Native evaluation batches chunks across documents. Dynamic quantization can produce small differences. Display merges contiguous subwords using maximum score; its accuracy is reported separately."
+    },
+    "bert-mini": {
+      "threshold": 0.4,
+      "subword_character_metrics": {
+        "examples": 2000,
+        "macro_character_f1": 0.6583506243299728,
+        "macro_character_f1_ci95": [
+          0.6411519230022857,
+          0.676279526234294
+        ],
+        "micro_character_precision": 0.5308883067396999,
+        "micro_character_recall": 0.764000274179176,
+        "micro_character_precision_ci95": [
+          0.5108009521406967,
+          0.5512140737950486
+        ],
+        "micro_character_recall_ci95": [
+          0.6886582903672991,
+          0.8279040812517808
+        ],
+        "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+        "micro_character_f1": 0.6264613309352518,
+        "exact_character_set_match": 0.4375,
+        "true_positive_characters": 11146,
+        "false_positive_characters": 9849,
+        "false_negative_characters": 3443,
+        "empty_gold_examples": 394,
+        "empty_gold_examples_flagged": 375,
+        "empty_gold_prediction_rate": 0.9517766497461929,
+        "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+      },
+      "display_whole_word_metrics": {
+        "examples": 2000,
+        "macro_character_f1": 0.6572122521464664,
+        "macro_character_f1_ci95": [
+          0.6401286304458479,
+          0.6745848675740316
+        ],
+        "micro_character_precision": 0.5179915549843951,
+        "micro_character_recall": 0.7735965453423812,
+        "micro_character_precision_ci95": [
+          0.49705978898426245,
+          0.5382246075666124
+        ],
+        "micro_character_recall_ci95": [
+          0.6977841741232683,
+          0.8373738443434784
+        ],
+        "confidence_interval_method": "1000 bootstrap resamples of documents, fixed seed; descriptive for this benchmark, not a deployment guarantee.",
+        "micro_character_f1": 0.6205019655276687,
+        "exact_character_set_match": 0.4425,
+        "true_positive_characters": 11286,
+        "false_positive_characters": 10502,
+        "false_negative_characters": 3303,
+        "empty_gold_examples": 394,
+        "empty_gold_examples_flagged": 375,
+        "empty_gold_prediction_rate": 0.9517766497461929,
+        "empty_gold_caveat": "No annotated span does not establish that a comment is benign. Some entire comments are toxic without attributable spans."
+      },
+      "native_macro_character_f1": 0.6609441749221872,
+      "browser_minus_native_macro_f1": -0.002593550592214333,
+      "held_out_worker_processing": {
+        "total_useful_tokens": 86238,
+        "total_processing_ms": 41904.8999992013,
+        "useful_tokens_per_second": 2057.945490900675,
+        "per_document_p50_ms": 19.799999952316284,
+        "per_document_p95_ms": 29.220000046491606,
+        "scope": "Actual held-out comments with variable lengths, no warmup, separate from fixed-size warm latency benchmark."
+      },
+      "note": "Browser inference batches overlapping chunks within a document. Native evaluation batches chunks across documents. Dynamic quantization can produce small differences. Display merges contiguous subwords using maximum score; its accuracy is reported separately."
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "dictionary_threshold": 0.35,
+  "linear_fp32_threshold": 0.3,
+  "linear_int8_threshold": 0.3,
+  "neural_thresholds": {
+    "bert_tiny_fp32": 0.35,
+    "bert_tiny_int8": 0.425,
+    "bert_mini_fp32": 0.4,
+    "bert_mini_int8": 0.4
+  },
+  "test_used_for_selection": false
+}

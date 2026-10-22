@@ -3,6 +3,15 @@
   "private": true,
   "scripts": {
     "test": "node --test tests/*.test.cjs",
-    "sync-filter": "cp docs/filter.js extension/filter.js"
+    "sync-filter": "cp docs/filter.js extension/filter.js",
+    "build": "node scripts/build-browser.mjs",
+    "test:browser": "node tests/browser.mjs"
+  },
+  "dependencies": {
+    "onnxruntime-web": "1.30.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "playwright": "1.64.1"
   }
 }

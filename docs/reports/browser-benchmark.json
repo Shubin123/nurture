@@ -1,0 +1,310 @@
+{
+  "worker_sha256": "221fb7bf42b8dba3d5582f76f02d383c1c108792a5576d40618563fb3a44ff6f",
+  "hardware": "Apple M4",
+  "architecture": "arm64",
+  "os": "Darwin 27.0.0",
+  "headless": true,
+  "runtime": "1.30.0",
+  "threads": 1,
+  "network": "localhost, warm HTTP cache per model, no artificial throttling",
+  "scope": "End-to-end worker text tokenization + inference + score aggregation. Worker processing excludes message serialization; roundtrip is reported separately. Inference uses overlap; useful input tokens exclude duplicates and padding.",
+  "models": {
+    "linear": {
+      "load": {
+        "model": "linear",
+        "load_ms": 2.100000023841858,
+        "threshold": 0.3,
+        "runtime": "JavaScript CPU; no WASM initialization or remote inference"
+      },
+      "browser": "155.0.8059.85",
+      "benchmarks": [
+        {
+          "nominal_input_tokens": 126,
+          "text_characters": 745,
+          "useful_tokens": 126,
+          "worker": {
+            "runs": 50,
+            "mean_ms": 1.1060000026226045,
+            "p50_ms": 1.100000023841858,
+            "p95_ms": 1.2000000476837158
+          },
+          "roundtrip": {
+            "runs": 50,
+            "mean_ms": 1.3919999992847443,
+            "p50_ms": 1.199999988079071,
+            "p95_ms": 2.900000035762787
+          },
+          "useful_tokens_per_second": 113924.05036276879
+        },
+        {
+          "nominal_input_tokens": 128,
+          "text_characters": 756,
+          "useful_tokens": 128,
+          "worker": {
+            "runs": 50,
+            "mean_ms": 1.1080000007152557,
+            "p50_ms": 1.100000023841858,
+            "p95_ms": 1.300000011920929
+          },
+          "roundtrip": {
+            "runs": 50,
+            "mean_ms": 1.6980000007152558,
+            "p50_ms": 1.199999988079071,
+            "p95_ms": 5.5
+          },
+          "useful_tokens_per_second": 115523.46562939636
+        },
+        {
+          "nominal_input_tokens": 1024,
+          "text_characters": 6008,
+          "useful_tokens": 1024,
+          "worker": {
+            "runs": 50,
+            "mean_ms": 8.548000005483628,
+            "p50_ms": 8.300000011920929,
+            "p95_ms": 10.5
+          },
+          "roundtrip": {
+            "runs": 50,
+            "mean_ms": 10.396000000238418,
+            "p50_ms": 10.600000023841858,
+            "p95_ms": 13.399999976158142
+          },
+          "useful_tokens_per_second": 119794.10380710034
+        }
+      ],
+      "batch_sweep": [],
+      "responsiveness": {
+        "main_thread_timer_ticks_during_30000_character_job": 9
+      },
+      "memory_proxy": {
+        "samples": 17,
+        "interval_seconds": 0.05,
+        "initial_process_tree_rss_bytes": 1028751360,
+        "sampled_peak_process_tree_rss_bytes": 1226866688,
+        "sampled_incremental_rss_bytes": 198115328,
+        "scope": "Whole Chrome process tree RSS; shared pages can be double-counted. This is a process-tree proxy, not model allocation or a portable memory guarantee."
+      }
+    },
+    "bert-tiny": {
+      "load": {
+        "model": "bert-tiny",
+        "load_ms": 149.19999998807907,
+        "threshold": 0.425,
+        "runtime": "single-threaded CPU / WASM; no remote inference"
+      },
+      "browser": "155.0.8059.85",
+      "benchmarks": [
+        {
+          "nominal_input_tokens": 126,
+          "text_characters": 745,
+          "useful_tokens": 126,
+          "worker": {
+            "runs": 50,
+            "mean_ms": 3.2419999957084658,
+            "p50_ms": 3.199999988079071,
+            "p95_ms": 3.399999976158142
+          },
+          "roundtrip": {
+            "runs": 50,
+            "mean_ms": 3.3479999995231626,
+            "p50_ms": 3.300000011920929,
+            "p95_ms": 3.5
+          },
+          "useful_tokens_per_second": 38864.89826242752
+        },
+        {
+          "nominal_input_tokens": 128,
+          "text_characters": 756,
+          "useful_tokens": 128,
+          "worker": {
+            "runs": 50,
+            "mean_ms": 5.941999994516372,
+            "p50_ms": 5.899999976158142,
+            "p95_ms": 6.199999988079071
+          },
+          "roundtrip": {
+            "runs": 50,
+            "mean_ms": 6.027999999523163,
+            "p50_ms": 6,
+            "p95_ms": 6.300000011920929
+          },
+          "useful_tokens_per_second": 21541.5685153359
+        },
+        {
+          "nominal_input_tokens": 1024,
+          "text_characters": 6008,
+          "useful_tokens": 1024,
+          "worker": {
+            "runs": 50,
+            "mean_ms": 34.32999999523163,
+            "p50_ms": 34.60000002384186,
+            "p95_ms": 36.89999997615814
+          },
+          "roundtrip": {
+            "runs": 50,
+            "mean_ms": 34.91,
+            "p50_ms": 35.30000001192093,
+            "p95_ms": 37.39999997615814
+          },
+          "useful_tokens_per_second": 29828.138658381344
+        }
+      ],
+      "batch_sweep": [
+        {
+          "batch_size": 1,
+          "runs": 20,
+          "mean_ms": 36.40499999821186,
+          "p50_ms": 36.30000001192093,
+          "p95_ms": 43.60000002384186,
+          "useful_tokens_per_second": 28128.004396382275
+        },
+        {
+          "batch_size": 4,
+          "runs": 20,
+          "mean_ms": 33.025000008940694,
+          "p50_ms": 33,
+          "p95_ms": 33.60000002384186,
+          "useful_tokens_per_second": 31006.813012044742
+        },
+        {
+          "batch_size": 8,
+          "runs": 20,
+          "mean_ms": 32.27999999523163,
+          "p50_ms": 32.19999998807907,
+          "p95_ms": 33.299999952316284,
+          "useful_tokens_per_second": 31722.42875313706
+        },
+        {
+          "batch_size": 16,
+          "runs": 20,
+          "mean_ms": 32.10499999523163,
+          "p50_ms": 31.899999976158142,
+          "p95_ms": 33.19999998807907,
+          "useful_tokens_per_second": 31895.343409191366
+        }
+      ],
+      "responsiveness": {
+        "main_thread_timer_ticks_during_30000_character_job": 31
+      },
+      "memory_proxy": {
+        "samples": 105,
+        "interval_seconds": 0.05,
+        "initial_process_tree_rss_bytes": 1018937344,
+        "sampled_peak_process_tree_rss_bytes": 1405353984,
+        "sampled_incremental_rss_bytes": 386416640,
+        "scope": "Whole Chrome process tree RSS; shared pages can be double-counted. This is a process-tree proxy, not model allocation or a portable memory guarantee."
+      }
+    },
+    "bert-mini": {
+      "load": {
+        "model": "bert-mini",
+        "load_ms": 175.60000002384186,
+        "threshold": 0.4,
+        "runtime": "single-threaded CPU / WASM; no remote inference"
+      },
+      "browser": "155.0.8059.85",
+      "benchmarks": [
+        {
+          "nominal_input_tokens": 126,
+          "text_characters": 745,
+          "useful_tokens": 126,
+          "worker": {
+            "runs": 50,
+            "mean_ms": 19.26199999690056,
+            "p50_ms": 19.200000047683716,
+            "p95_ms": 19.69999998807907
+          },
+          "roundtrip": {
+            "runs": 50,
+            "mean_ms": 19.384000000953673,
+            "p50_ms": 19.30000001192093,
+            "p95_ms": 19.900000035762787
+          },
+          "useful_tokens_per_second": 6541.37680512276
+        },
+        {
+          "nominal_input_tokens": 128,
+          "text_characters": 756,
+          "useful_tokens": 128,
+          "worker": {
+            "runs": 50,
+            "mean_ms": 38.27400000452995,
+            "p50_ms": 38.19999998807907,
+            "p95_ms": 39.5
+          },
+          "roundtrip": {
+            "runs": 50,
+            "mean_ms": 38.435999999046324,
+            "p50_ms": 38.30000001192093,
+            "p95_ms": 39.69999998807907
+          },
+          "useful_tokens_per_second": 3344.3068397567654
+        },
+        {
+          "nominal_input_tokens": 1024,
+          "text_characters": 6008,
+          "useful_tokens": 1024,
+          "worker": {
+            "runs": 50,
+            "mean_ms": 211.74999999642372,
+            "p50_ms": 211.39999997615814,
+            "p95_ms": 219.80000001192093
+          },
+          "roundtrip": {
+            "runs": 50,
+            "mean_ms": 212.3460000002384,
+            "p50_ms": 212.0999999642372,
+            "p95_ms": 220.30000001192093
+          },
+          "useful_tokens_per_second": 4835.891381427601
+        }
+      ],
+      "batch_sweep": [
+        {
+          "batch_size": 1,
+          "runs": 20,
+          "mean_ms": 215.39499999880792,
+          "p50_ms": 214.10000002384186,
+          "p95_ms": 225.30000001192093,
+          "useful_tokens_per_second": 4754.056500873591
+        },
+        {
+          "batch_size": 4,
+          "runs": 20,
+          "mean_ms": 213.08000000715256,
+          "p50_ms": 212.69999998807907,
+          "p95_ms": 218.5999999642372,
+          "useful_tokens_per_second": 4805.7067766361315
+        },
+        {
+          "batch_size": 8,
+          "runs": 20,
+          "mean_ms": 213.26500000953675,
+          "p50_ms": 212.4000000357628,
+          "p95_ms": 221.9000000357628,
+          "useful_tokens_per_second": 4801.537992423553
+        },
+        {
+          "batch_size": 16,
+          "runs": 20,
+          "mean_ms": 214.84000000059604,
+          "p50_ms": 214,
+          "p95_ms": 235.30000001192093,
+          "useful_tokens_per_second": 4766.337739700052
+        }
+      ],
+      "responsiveness": {
+        "main_thread_timer_ticks_during_30000_character_job": 204
+      },
+      "memory_proxy": {
+        "samples": 625,
+        "interval_seconds": 0.05,
+        "initial_process_tree_rss_bytes": 1025966080,
+        "sampled_peak_process_tree_rss_bytes": 1401012224,
+        "sampled_incremental_rss_bytes": 375046144,
+        "scope": "Whole Chrome process tree RSS; shared pages can be double-counted. This is a process-tree proxy, not model allocation or a portable memory guarantee."
+      }
+    }
+  }
+}

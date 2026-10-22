@@ -1,0 +1,73 @@
+{
+  "seed": 1729,
+  "base_model": "google/bert_uncased_L-4_H-256_A-4",
+  "revision": "387825ce42dbb39b87911cdf8e383ee3b25184f8",
+  "train_examples": 7917,
+  "train_chunks": 8523,
+  "validation_chunks": 737,
+  "max_length": 128,
+  "stride": 32,
+  "device": "mps",
+  "batch_size": 64,
+  "learning_rate": 0.0001,
+  "epochs": 8,
+  "history": [
+    {
+      "epoch": 1,
+      "loss": 0.2988492751410648,
+      "threshold": 0.325,
+      "macro_character_f1": 0.6412217319499586,
+      "elapsed_seconds": 29.231414708017837
+    },
+    {
+      "epoch": 2,
+      "loss": 0.20923716586027571,
+      "threshold": 0.4,
+      "macro_character_f1": 0.6766173662959937,
+      "elapsed_seconds": 57.157982582983095
+    },
+    {
+      "epoch": 3,
+      "loss": 0.19034258053818745,
+      "threshold": 0.35,
+      "macro_character_f1": 0.6627193411405052,
+      "elapsed_seconds": 86.05059229198378
+    },
+    {
+      "epoch": 4,
+      "loss": 0.1619666711941584,
+      "threshold": 0.375,
+      "macro_character_f1": 0.6607212786046668,
+      "elapsed_seconds": 116.5855524999788
+    },
+    {
+      "epoch": 5,
+      "loss": 0.1271274150974715,
+      "threshold": 0.4,
+      "macro_character_f1": 0.6640861162444172,
+      "elapsed_seconds": 145.85285129200201
+    },
+    {
+      "epoch": 6,
+      "loss": 0.10925018131288129,
+      "threshold": 0.475,
+      "macro_character_f1": 0.6571480594701264,
+      "elapsed_seconds": 174.60876283299876
+    },
+    {
+      "epoch": 7,
+      "loss": 0.0979648231347995,
+      "threshold": 0.475,
+      "macro_character_f1": 0.6556377335214906,
+      "elapsed_seconds": 202.03544833301567
+    },
+    {
+      "epoch": 8,
+      "loss": 0.08954861295868212,
+      "threshold": 0.5,
+      "macro_character_f1": 0.652993921393364,
+      "elapsed_seconds": 229.35336429200834
+    }
+  ],
+  "parameters": 11105282
+}

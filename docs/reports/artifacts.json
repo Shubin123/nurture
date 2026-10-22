@@ -1,0 +1,81 @@
+{
+  "format": 1,
+  "runtime": "1.30.0",
+  "assets": [
+    {
+      "path": "models/bert-mini/config.json",
+      "bytes": 785,
+      "sha256": "85bed80cee35cf77e85a474ca1d2b2200a85cd237dc1d7a5e4441bee17662445"
+    },
+    {
+      "path": "models/bert-mini/inference.json",
+      "bytes": 199,
+      "sha256": "0c498b9ecae773da6a1c4d6c552d3760cde131218704fa917bd8072260d0d284"
+    },
+    {
+      "path": "models/bert-mini/model.int8.onnx",
+      "bytes": 11351057,
+      "sha256": "553e43a9d0366c4b8979212bdeb448d44d9e0022e4f7cf48e318aa4be2768c1d"
+    },
+    {
+      "path": "models/bert-tiny/config.json",
+      "bytes": 784,
+      "sha256": "c92fd6672b80f011361e66f558ca7759a288837f39bce4f54e4b56a42c8112c9"
+    },
+    {
+      "path": "models/bert-tiny/inference.json",
+      "bytes": 201,
+      "sha256": "403e5856d910545d1e6492f3120414e919102c9b0a2eb851cbf8386c3808c664"
+    },
+    {
+      "path": "models/bert-tiny/model.int8.onnx",
+      "bytes": 4488172,
+      "sha256": "df01e4f7fffca3f3f1e5551182b8e1b699cf624b71b660896ed68275d6699d52"
+    },
+    {
+      "path": "models/linear/config.json",
+      "bytes": 228,
+      "sha256": "75e2b17bc811de8b715e26b42b32fb20ba4744681af41f02b300b59546889bcf"
+    },
+    {
+      "path": "models/linear/weights.int8",
+      "bytes": 65536,
+      "sha256": "3d493f6bfdc9d9ac46795113dd18b8c27f9468b753dcb4c134a1e3a3d12769d3"
+    },
+    {
+      "path": "models/vocab.txt",
+      "bytes": 231508,
+      "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3"
+    },
+    {
+      "path": "vendor/ONNX-RUNTIME-LICENSE",
+      "bytes": 1073,
+      "sha256": "2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c"
+    },
+    {
+      "path": "vendor/ONNX-RUNTIME-THIRD-PARTY-NOTICES",
+      "bytes": 338088,
+      "sha256": "143764b952fdb1a7c69ce653bfba74a7744d6a8a573bfb73e235fba356c83de3"
+    },
+    {
+      "path": "vendor/ort-wasm-simd-threaded.mjs",
+      "bytes": 24381,
+      "sha256": "e13f7f94fc51b4ca72b12faeb1ee95f4ace6dfbc8939bc718aabdc0a27c4299b"
+    },
+    {
+      "path": "vendor/ort-wasm-simd-threaded.wasm",
+      "bytes": 14239897,
+      "sha256": "3398c10d07d229bd91b364548e130e0e51a8e5704b88c7c083ebbeb78842dee2"
+    },
+    {
+      "path": "model-worker.js",
+      "bytes": 78007,
+      "sha256": "221fb7bf42b8dba3d5582f76f02d383c1c108792a5576d40618563fb3a44ff6f"
+    },
+    {
+      "path": "model-worker.js.LEGAL.txt",
+      "bytes": 218,
+      "sha256": "a5fb36b2a2235ef05f176513325442f3bd8923c885cac4b951364faf22c7951a"
+    }
+  ]
+}

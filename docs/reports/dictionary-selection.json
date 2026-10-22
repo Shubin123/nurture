@@ -1,0 +1,8 @@
+{
+  "train_only_lexicon_entries": 7222,
+  "minimum_occurrences": 3,
+  "validation_selection": {
+    "threshold": 0.35,
+    "macro_character_f1": 0.6185814151471802
+  }
+}

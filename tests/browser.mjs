@@ -1,0 +1,66 @@
+import assert from 'node:assert/strict';
+import { chromium } from 'playwright';
+
+const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true });
+const baseUrl = process.env.BASE_URL || 'http://localhost:8000';
+try {
+  const page = await browser.newPage();
+  const requests = [];
+  page.context().on('request', request => requests.push({ url: request.url(), method: request.method() }));
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto(baseUrl);
+  await page.waitForFunction(() => document.querySelector('#model-results').querySelectorAll('tr').length === 3);
+  assert.equal(requests.some(request => new URL(request.url).pathname.includes('/models/')), false);
+  assert.equal(await page.locator('#output sup').count(), 2);
+  await page.locator('#load-model').click();
+  assert.match(await page.locator('#model-status').innerText(), /Confirm/);
+  assert.equal(requests.some(request => new URL(request.url).pathname.includes('/models/')), false);
+  await page.locator('#model-consent').check();
+  await page.locator('#load-model').click();
+  await page.waitForFunction(() => !document.querySelector('#run-model').disabled, { timeout: 120000 });
+  await page.locator('#run-model').click();
+  await page.waitForFunction(() => document.querySelector('#model-status').textContent.includes('worker processing'));
+  assert.ok((await page.locator('#model-output').innerText()).length > 10);
+  assert.ok(await page.locator('#model-output sup').count() > 0);
+  await page.locator('#unload-model').click();
+  assert.equal(await page.locator('#run-model').isDisabled(), true);
+  assert.equal(await page.locator('#model-output').innerText(), '');
+  await page.locator('#model-choice').selectOption('bert-tiny');
+  await page.locator('#load-model').click();
+  await page.waitForFunction(() => !document.querySelector('#run-model').disabled, { timeout: 120000 });
+  await page.locator('#run-model').click();
+  await page.waitForFunction(() => document.querySelector('#model-status').textContent.includes('worker processing'));
+  assert.match(await page.locator('#model-status').innerText(), /tokens/);
+  await page.locator('#model-consent').uncheck();
+  assert.equal(await page.locator('#run-model').isDisabled(), true);
+  await page.locator('#share').click();
+  assert.match(await page.locator('#share-status').innerText(), /First confirm/);
+  await page.locator('#consent').check();
+  await page.evaluate(() => { navigator.mediaDevices.getDisplayMedia = async () => { throw new DOMException('denied', 'NotAllowedError'); }; });
+  await page.locator('#share').click();
+  await page.waitForFunction(() => document.querySelector('#share-status').textContent.includes('cancelled'));
+  await page.setViewportSize({ width: 375, height: 812 });
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  await page.goto(baseUrl);
+  await page.evaluate(() => {
+    document.body.innerHTML = '<p id="plain">STUPID idiot stupidly</p><input id="field" value="stupid"><div contenteditable="true" id="edit">stupid</div><pre id="code">stupid</pre><div id="dynamic"></div>';
+  });
+  await page.addScriptTag({ path: 'extension/filter.js' });
+  await page.addScriptTag({ path: 'extension/content.js' });
+  await page.evaluate(() => nurtureSession.start(NurtureFilter.parseRules('stupid = unhelpful\nidiot = person')));
+  assert.equal(await page.locator('#plain').innerText(), 'unhelpful* person* stupidly');
+  assert.equal(await page.locator('#field').inputValue(), 'stupid');
+  assert.equal(await page.locator('#edit').innerText(), 'stupid');
+  assert.equal(await page.locator('#code').innerText(), 'stupid');
+  await page.evaluate(() => { document.querySelector('#dynamic').textContent = 'stupid'; });
+  await page.waitForFunction(() => document.querySelector('#dynamic').textContent === 'unhelpful*');
+  await page.evaluate(() => nurtureSession.stop());
+  assert.equal(await page.locator('#plain').innerText(), 'STUPID idiot stupidly');
+  assert.equal(await page.locator('#dynamic').innerText(), 'stupid');
+  assert.deepEqual(errors, []);
+  assert.equal(requests.every(request => request.method === 'GET' && new URL(request.url).hostname === new URL(baseUrl).hostname), true);
+  console.log('PASS: real CPU/WASM inference, rule/model consent, marked output, unload, mobile layout, denied capture, DOM changes, editable exclusions and restoration.');
+} finally {
+  await browser.close();
+}

@@ -18,16 +18,17 @@ Updated October 22, 2026. Reframes the original protection proposal around volun
 | Small marker next to replacements | Implemented in demo and extension |
 | Browser source picker, consent, local preview, stop | Implemented; requires manual browser/platform verification |
 | Another tab's ordinary DOM text replacement | Extension prototype; user must explicitly activate on that tab |
-| Context-sensitive English model | Training/evaluation roadmap only |
+| Context-sensitive English models | Tiny and Mini fine-tuned, INT8 exported, native and full held-out browser evaluation completed; opt-in review only, automatic-filter gates unmet |
+| Lightweight learned model | Character-context logistic model trained and quantized to 64 KiB weights; browser inference and benchmarks included |
 | Stream OCR, pixel overlays, speech filtering | Not implemented |
 
 ## Proposed milestones
 
 1. **Prototype review:** exercise allow/deny/cancel sharing, browser stop, consent withdrawal, extension activation, dynamic pages and restoration. Confirm the English lexicon and replacement policy with the user. Treat unexpected page behavior as a release blocker for that site.
 2. **Reliable DOM filtering:** test supported Chromium versions, large pages, page frameworks, navigation and accessibility. Add worker/batched processing where measurements require it. Keep no broad host access by default. Do not claim complete filtering for frames, shadow DOM or split-node words.
-3. **Dataset preparation:** approve category definitions, licensing, consent, annotation scheme and source-separated splits. No implicit training capture. See [MODEL.md](MODEL.md).
-4. **Model experiment:** compare compact span classification with deterministic and character baselines; evaluate context, benign text and dialect slices. Train only after authorized data exists. Publish metrics and failures.
-5. **Browser validation:** quantize/export the candidate, measure warm and cold performance and memory on named hardware. Optional GPU must have a tested CPU fallback. Ship only if the model meets predefined accuracy and efficiency gates.
+3. **Dataset preparation — completed for the research experiment:** pinned CC0 Toxic Spans data, normalized disjoint splits and checksums. No tab data collected. Author IDs are unavailable, so author/source independence is not established. See [MODEL.md](MODEL.md).
+4. **Model experiment — completed:** trained a character-context baseline and fine-tuned two compact span classifiers; compared native FP32/INT8 and actual browser outputs. Published precision, recall, character F1, confidence intervals, diagnostics and limitations. Independent dialect/fairness validation remains open.
+5. **Browser validation — research release completed, production gate open:** quantized models, self-hosted CPU/WASM worker, batched overlapping chunks, tokenization conformance, measured latency/throughput and a process-tree memory proxy. No GPU is required. Models remain explicitly opt-in review tools because automatic-filter accuracy and memory gates are not established.
 6. **Optional stream filtering:** separately validate OCR, region tracking and delayed overlay output. Do not relabel the existing preview as filtered. Audio remains a separate explicit opt-in milestone.
 
 ## Trust boundaries and release gates
@@ -36,7 +37,7 @@ Use DOM text nodes and `textContent`, not HTML interpolation, for user rules. Le
 
 Run engine regressions, confirm the two engine copies match, inspect extension permissions and check JavaScript syntax before publication. Manual browser tests must cover unsupported capture, permission cancellation, extension restrictions, dynamic content and reload recovery. The prototype may flash original content before replacement and is not a preventive security boundary.
 
-Model launch gates, performance targets and data requirements are proposed in `MODEL.md`; none are reported as achieved. No training should start until the dataset and evaluation protocol are approved.
+`MODEL.md` and `docs/reports/RESULTS.md` distinguish achieved research deliverables from unmet production gates. Training uses a pinned public CC0 benchmark, not captured tabs. Do not silently promote the research models to automatic enforcement based on throughput or aggregate F1 alone.
 
 ## Hosting
 

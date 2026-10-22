@@ -1,0 +1,9 @@
+{
+  "model": "Nurture hashed character-context logistic regression",
+  "dimensions": 65536,
+  "scale": 0.02412308007478714,
+  "bias": -4.806675910949707,
+  "threshold": 0.3,
+  "hash": "FNV-1a UTF-8 unsigned32",
+  "version": 1
+}

@@ -1,0 +1,35 @@
+# Measured model results
+
+Local measurements, not deployment or safety guarantees.
+
+Hardware: Apple M4, 24 GiB RAM. Headless Chrome 155.0.8059.85, CPU-only, one WASM thread. Native ONNX Runtime uses two threads.
+
+Dataset: 7,917 training, 689 validation, 2,000 held-out test comments after normalized deduplication. Checkpoints and thresholds use validation only.
+
+| Model | Weight/model bytes | Browser test character F1 | Whole-word display F1 | p95 ms / 128 useful tokens | Useful tokens/s / 1,024-token document |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| linear | 65,536 | 0.6419 | 0.6419 | 1.3 | 119,794 |
+| bert-tiny | 4,488,172 | 0.6399 | 0.6391 | 6.2 | 29,828 |
+| bert-mini | 11,351,057 | 0.6584 | 0.6572 | 39.5 | 4,836 |
+
+## Interpretation
+
+- F1 is macro per-document character-span F1, not classification accuracy. Whole-word display expansion has separate metrics.
+- The character model is the recommended throughput baseline. Mini offers a modest contextual benchmark improvement at substantially higher compute cost. Tiny is not a demonstrated accuracy upgrade over the character model.
+- Warm speed tests use a repeated English sentence, five warmups and 50 runs. Actual variable-length held-out throughput is in browser-evaluation.json. Useful tokens exclude overlap and padding.
+- 126 useful WordPieces plus two special tokens fit one neural chunk; 128 useful WordPieces require two overlapping chunks.
+- Native/browser dynamic quantization and batching differ slightly. Quantization reduces weights about fourfold, but is not uniformly faster on native CPU.
+- Localhost initialization is not a real Internet cold-download measurement. Neural models additionally need the shared approximately 14 MiB WASM runtime and vocabulary.
+- Whole-Chrome RSS sampling is a noisy process-tree proxy and can double-count shared pages. The 150 MB additional-model-memory target is not proven; no memory pass is claimed.
+- Empty gold spans are not benign labels: entire toxic comments can lack localized annotations. The small authored challenge is diagnostic, not independent fairness or production false-positive validation.
+- The 99% precision / low benign-false-positive release gate is NOT met. Models stay opt-in and review-only; only user-approved rules supply replacements.
+
+## Evidence
+
+- evaluation.json: native FP32/INT8 accuracy, document-bootstrap confidence intervals and length slices.
+- browser-evaluation.json: all 2,000 held-out comments evaluated through the served browser worker.
+- browser-benchmark.json: worker/roundtrip latency, batch sweeps, responsiveness and process-tree RSS proxy.
+- browser-benchmark-baseline.json: pre-static-sequence measurement; differences are small/noisy, not a claimed speedup.
+- challenge.json: provisional benign, identity, quotation/negation and direct-insult examples with predictions.
+- tokenizer-conformance.json: token IDs, Unicode offsets and hashed features agree on 695 validation/diagnostic fixtures.
+- dataset.json, frozen-selection.json, *-training.json, *-export.json and artifacts.json: provenance, selection, training and integrity records.

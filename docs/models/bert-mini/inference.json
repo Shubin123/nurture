@@ -1,0 +1,9 @@
+{
+  "max_length": 128,
+  "stride": 32,
+  "batch_size": 8,
+  "threshold": 0.4,
+  "positive_class": 1,
+  "quantization": "dynamic int8, per-channel MatMul and Gather weights",
+  "experimental": true
+}
