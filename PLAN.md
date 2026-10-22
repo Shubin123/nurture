@@ -1,88 +1,43 @@
-# Nurture · Software protection plan
+# Nurture · Consent-first content filtering plan
 
-Status: proposed implementation roadmap · October 22, 2026
+Updated October 22, 2026. Reframes the original protection proposal around voluntary English content filtering. The earlier licensing and anti-redistribution strategy remains in [PROTECTION.md](PROTECTION.md); it is not the current product's primary scope.
 
-## Objective and boundaries
+## Product contract
 
-Protect paid value, reduce casual license sharing and commercial redistribution, and preserve a reliable experience for legitimate customers. Treat every client as untrusted. No client-side control promises uncrackable software. This plan is a design proposal, not an implemented security system.
+- Users explicitly choose each shared source in the browser picker. No silent capture or access to another person's tabs. Authorization is required for other people's private content.
+- The current website offers an unfiltered local display-stream preview and a separate working English text-replacement demo. These are distinct capabilities, clearly labeled.
+- The companion Chromium extension modifies ordinary text only on tabs explicitly enabled by the user. Each replacement receives a small superscript `*`. A stop-and-restore control is available on the page and in the popup.
+- No page content or captures are uploaded, recorded, retained for training or logged. No model is claimed to be trained or accurate without evaluation.
+- The filter is a user preference tool, not an access-control mechanism, child-safety guarantee or substitute for platform moderation.
 
-Assumptions: a commercial application with user accounts and optional online premium services. Streaming controls apply only if protected media is part of the product. Initial schedule is a six-week planning estimate, subject to product scope and staffing.
+## Implementation status
 
-## Protection layers
+| Capability | Status |
+| --- | --- |
+| English whole-word replacement with explicit rules | Implemented; deterministic baseline, not ML |
+| Small marker next to replacements | Implemented in demo and extension |
+| Browser source picker, consent, local preview, stop | Implemented; requires manual browser/platform verification |
+| Another tab's ordinary DOM text replacement | Extension prototype; user must explicitly activate on that tab |
+| Context-sensitive English model | Training/evaluation roadmap only |
+| Stream OCR, pixel overlays, speech filtering | Not implemented |
 
-| Layer | Proposed controls | Target abuse | Limits and safeguards |
-| --- | --- | --- | --- |
-| Licensing | Signed licenses, activation, entitlement API, revocation | Keygen-style abuse and unmanaged redistribution | Online check-in strengthens enforcement; never embed signing secrets in clients. |
-| Device identity | Pseudonymous device registration and optional device binding | License sharing, VM cloning, seat abuse | Fingerprints can be spoofed; provide device resets and avoid raw hardware identifiers. |
-| Server-side control | Remote premium APIs, model weights, billing and critical business logic | Offline copies of core paid services | Requires connectivity; budget latency and design an outage experience. |
-| Tamper resistance | Selective obfuscation, integrity checks, signed updates and anti-debugging review | Casual reverse engineering and patching | Cost-raising only; avoid invasive drivers and unreliable lockouts. |
-| Streaming / content | Platform DRM where supported, forensic watermarking and concurrent-stream limits | Redistribution, credential sharing and leak tracing | Conditional workstream; watermarking helps trace leaks, not prevent capture. |
-| Detection | Minimal activation events, anomaly rules and consumption analysis | Abnormal seats, suspicious activations and account abuse | Minimize data, limit retention and review signals before enforcement. |
-| Enforcement | Evidence preservation, web monitoring and reviewed provider notices | Commercial redistribution and discoverability | Prioritize material harm; notices and escalation require authorized legal review. |
+## Proposed milestones
 
-## Architecture and trust boundaries
+1. **Prototype review:** exercise allow/deny/cancel sharing, browser stop, consent withdrawal, extension activation, dynamic pages and restoration. Confirm the English lexicon and replacement policy with the user. Treat unexpected page behavior as a release blocker for that site.
+2. **Reliable DOM filtering:** test supported Chromium versions, large pages, page frameworks, navigation and accessibility. Add worker/batched processing where measurements require it. Keep no broad host access by default. Do not claim complete filtering for frames, shadow DOM or split-node words.
+3. **Dataset preparation:** approve category definitions, licensing, consent, annotation scheme and source-separated splits. No implicit training capture. See [MODEL.md](MODEL.md).
+4. **Model experiment:** compare compact span classification with deterministic and character baselines; evaluate context, benign text and dialect slices. Train only after authorized data exists. Publish metrics and failures.
+5. **Browser validation:** quantize/export the candidate, measure warm and cold performance and memory on named hardware. Optional GPU must have a tested CPU fallback. Ship only if the model meets predefined accuracy and efficiency gates.
+6. **Optional stream filtering:** separately validate OCR, region tracking and delayed overlay output. Do not relabel the existing preview as filtered. Audio remains a separate explicit opt-in milestone.
 
-1. A billing webhook is authenticated, deduplicated and reconciled into the entitlement service. A client must never grant its own paid status.
-2. The account service authenticates the customer; activation atomically reserves an allowed device seat. A device-bound key is preferred over an invasive fingerprint where feasible.
-3. A separate signing service issues a short-lived entitlement lease containing subject, product, features, device reference, issuer, audience, expiry and key ID. Use a maintained cryptographic library and an explicitly allowed signature algorithm.
-4. Clients verify signatures with public keys. Premium servers independently validate identity, entitlement, expiry, quotas and revocation. Never trust client UI checks for authorization.
-5. Proposed default: renew leases every 24 hours, with a documented 72-hour offline allowance for local features after the last successful renewal. These are product-policy proposals, not security guarantees. Remote operations require current server authorization; offline revocation cannot take effect until expiry or reconnection.
-6. Rotate signing keys with an overlap period, audited access and a tested compromise runbook. Keep signing material in managed key storage, separate from source code and release artifacts.
+## Trust boundaries and release gates
 
-## Proposed API contract
+Use DOM text nodes and `textContent`, not HTML interpolation, for user rules. Leave inputs, passwords and editable regions alone. Original matched words are kept only in the extension's page session for restoration; explain that DOM changes remain visible to site scripts. Stop must disconnect mutation observers and release capture tracks. Handle permission denial without retry loops or hidden prompts.
 
-| Endpoint | Responsibility | Required safeguards |
-| --- | --- | --- |
-| `POST /v1/activations` | Register device and reserve seat | Authenticated account, idempotency key, rate limits, atomic seat cap |
-| `POST /v1/leases/renew` | Issue refreshed signed entitlement | Device proof, current billing state, revoked-device check |
-| `GET /v1/entitlements` | Return current account features | Account-scoped authorization; no shared-cache leakage |
-| `DELETE /v1/activations/{id}` | Release an owned seat | Ownership verification, audit trail, reset-abuse limits |
-| `POST /v1/admin/revocations` | Revoke account, device or license | Privileged role, strong authentication, reason and audit record |
+Run engine regressions, confirm the two engine copies match, inspect extension permissions and check JavaScript syntax before publication. Manual browser tests must cover unsupported capture, permission cancellation, extension restrictions, dynamic content and reload recovery. The prototype may flash original content before replacement and is not a preventive security boundary.
 
-Use TLS, bounded request sizes, replay-resistant device challenges, structured error responses and explicit API versioning. Do not log complete licenses, tokens or hardware identifiers.
+Model launch gates, performance targets and data requirements are proposed in `MODEL.md`; none are reported as achieved. No training should start until the dataset and evaluation protocol are approved.
 
-## Delivery roadmap
+## Hosting
 
-| Phase | Owner role | Deliverables | Exit criteria |
-| --- | --- | --- | --- |
-| Week 1 · Define | Product + security | Asset inventory, abuse model, connectivity policy, privacy review and baseline metrics | Approved threat model, offline policy and data inventory |
-| Weeks 2–3 · Authorize | Backend + billing | Entitlement store, webhook reconciliation, signing, activation and revocation APIs | Tampered/expired/revoked leases rejected; concurrent activation cannot exceed seats; webhook retries do not duplicate grants |
-| Week 4 · Integrate | Client + platform | Lease verification, renewal, account device dashboard and recovery UX | Offline boundaries, clock changes, reset flows and service outages tested; supported OS/device matrix documented |
-| Week 5 · Observe | Security + operations | Minimal telemetry, anomaly rules, alert review and signing-key runbooks | Retention verified, false-positive baseline measured, key rotation and recovery rehearsed |
-| Week 6 · Harden and pilot | Release + support | Selective hardening, staged rollout, support playbook and optional media assessment | Update signature verified, rollback exercised, pilot reviewed and release approved |
-
-## Privacy and customer experience
-
-- Collect only account ID, pseudonymous device reference, application version, event time and the minimal usage counters needed for enforcement. Review IP handling separately; do not collect persistent raw hardware inventories by default.
-- Proposed retention: 30 days for raw security events, 90 days for aggregates, with documented exceptions for active incidents. Approve the policy before collection starts.
-- Publish what is collected and why. Provide device removal, account recovery, accessible error messages and an appeal route.
-- Start anomaly detection in observation mode. Do not permanently ban accounts on one signal; require corroboration and human review for consequential actions.
-- On entitlement-service outages, preserve bounded local access where a valid lease permits it. Do not silently make premium server APIs fail-open.
-
-## Validation and launch gates
-
-- Security: invalid signatures, wrong audience/product/device, expired leases, replay, revocation, privilege boundaries, webhook forgery and concurrent seat races have automated coverage.
-- Reliability: exercise service timeout, partial outage, key rotation, billing delay, renewal backoff, offline expiry and recovery. Set availability and latency targets after measuring the baseline.
-- Privacy: inspect emitted events, verify deletion and retention, restrict operator access and complete the privacy review.
-- Customer impact: test legitimate hardware changes, reinstall, travel, accessibility tools and device replacement; support can recover access without bypassing audit controls.
-- Release: staged rollout with an entitlement enforcement kill switch controlled server-side, documented rollback and on-call ownership. Kill switches must not bypass server authentication or billing authorization.
-
-## Measures of success
-
-Establish a pre-enforcement baseline, then review weekly: activation success rate, entitlement API errors and latency, renewal failure rate, seat-reset requests, reviewed abuse incidents, false-positive rate, support burden and estimated revenue protected. Agree numerical targets before pilot; do not count blocked attempts alone as success.
-
-## Operations and enforcement
-
-Triage alerts → preserve minimal evidence → verify ownership and impact → review customer history → choose reversible mitigation → notify and offer appeal → escalate commercial redistribution to authorized counsel/providers where appropriate. Keep an audit record and revisit rules after false positives. Legal procedures differ by jurisdiction; this plan does not supply legal advice or automated notice templates.
-
-## Open decisions
-
-- Which features must remain usable fully offline, and for how long?
-- What are the seat limits, transfer allowance and refund/revocation rules?
-- Which platforms and media formats need support?
-- Who owns key management, incident response, privacy review and customer appeals?
-- What is the acceptable operating budget and measured latency envelope?
-
-## Hosting and privacy
-
-The GitHub repository and static website are public, as approved by the owner. GitHub Pages publishes from the `main` branch and `/docs` directory without a custom Actions workflow. No secrets or production security implementation belong in this documentation repository.
+Keep the repository and GitHub Pages public, as requested. Publish from `main` → `/docs` without a custom Actions workflow. Do not publish captures, private browsing data, credentials or sensitive datasets. No agent attribution in commits or pushes.
