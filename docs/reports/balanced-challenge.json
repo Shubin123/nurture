@@ -1,0 +1,818 @@
+{
+  "provenance": "Purpose-written project evaluation examples, not collected from tabs or used for training/threshold selection.",
+  "annotation": "Single-author provisional diagnostic labels. Not independently adjudicated and not a representative benign-rate benchmark. Quotes and negations test a contextual rather than blanket word-blocking policy.",
+  "models": {
+    "linear-balanced": {
+      "slices": {
+        "benign": {
+          "examples": 12,
+          "examples_flagged": 0,
+          "expected_positive_examples": 0,
+          "expected_positive_examples_flagged": 0
+        },
+        "benign_identity_mention": {
+          "examples": 10,
+          "examples_flagged": 2,
+          "expected_positive_examples": 0,
+          "expected_positive_examples_flagged": 0
+        },
+        "quotation_or_negation": {
+          "examples": 6,
+          "examples_flagged": 6,
+          "expected_positive_examples": 0,
+          "expected_positive_examples_flagged": 0
+        },
+        "direct_insult": {
+          "examples": 8,
+          "examples_flagged": 8,
+          "expected_positive_examples": 8,
+          "expected_positive_examples_flagged": 8
+        }
+      },
+      "examples": [
+        {
+          "slice": "benign",
+          "text": "Please explain your concerns about the proposal.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "I disagree with the conclusion, but I appreciate the careful analysis.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "The experiment needs a larger sample and a clearer baseline.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "The library opens at nine on Monday morning.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "She saved the document and closed the browser.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "Could you check the arithmetic in the second paragraph?",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "The argument is weak because the evidence is incomplete.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "We can criticize a policy without insulting its supporters.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "The students prepared an English presentation about renewable energy.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "I made an error and corrected it after reviewing the feedback.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "This software has a bug that causes duplicate notifications.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "The team should postpone the release until the tests pass.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "The museum has an exhibition on Jewish history and culture.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "Muslim families joined their neighbors at the community garden.",
+          "terms": [],
+          "predicted": [
+            {
+              "text": "Muslim",
+              "start": 0,
+              "end": 6,
+              "score": 0.448970450754417
+            }
+          ]
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "The article describes the work of Black scientists.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "The accessibility workshop was led by a disabled software engineer.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "A gay couple volunteered to organize the neighborhood picnic.",
+          "terms": [],
+          "predicted": [
+            {
+              "text": "gay",
+              "start": 2,
+              "end": 5,
+              "score": 0.33148568248031907
+            }
+          ]
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "The researcher interviewed Christian and atheist participants.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "The course includes poetry by women and men from many countries.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "Immigrants contributed recipes to the community cookbook.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "Transgender students are welcome to participate in the workshop.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "The club supports older adults learning to use a computer.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "quotation_or_negation",
+          "text": "The teacher explained why calling someone an idiot is hurtful.",
+          "terms": [],
+          "predicted": [
+            {
+              "text": "idiot",
+              "start": 45,
+              "end": 50,
+              "score": 0.9374101222793078
+            }
+          ]
+        },
+        {
+          "slice": "quotation_or_negation",
+          "text": "Please do not describe your classmates as stupid.",
+          "terms": [],
+          "predicted": [
+            {
+              "text": "stupid",
+              "start": 42,
+              "end": 48,
+              "score": 0.8776237178758586
+            }
+          ]
+        },
+        {
+          "slice": "quotation_or_negation",
+          "text": "The article quotes the word idiot while discussing respectful language.",
+          "terms": [],
+          "predicted": [
+            {
+              "text": "idiot",
+              "start": 28,
+              "end": 33,
+              "score": 0.8700742065221025
+            }
+          ]
+        },
+        {
+          "slice": "quotation_or_negation",
+          "text": "Nobody here is a moron; we simply have different information.",
+          "terms": [],
+          "predicted": [
+            {
+              "text": "moron",
+              "start": 17,
+              "end": 22,
+              "score": 0.8450257425473849
+            }
+          ]
+        },
+        {
+          "slice": "quotation_or_negation",
+          "text": "A moderator removed the comment that called the author a fool.",
+          "terms": [],
+          "predicted": [
+            {
+              "text": "fool",
+              "start": 57,
+              "end": 61,
+              "score": 0.8286697900849707
+            }
+          ]
+        },
+        {
+          "slice": "quotation_or_negation",
+          "text": "The dictionary includes an entry for the word stupid.",
+          "terms": [],
+          "predicted": [
+            {
+              "text": "stupid",
+              "start": 46,
+              "end": 52,
+              "score": 0.8334780406209557
+            }
+          ]
+        },
+        {
+          "slice": "direct_insult",
+          "text": "You are a stupid idiot.",
+          "terms": [
+            "stupid",
+            "idiot"
+          ],
+          "predicted": [
+            {
+              "text": "stupid",
+              "start": 10,
+              "end": 16,
+              "score": 0.9467366818988066
+            },
+            {
+              "text": "idiot",
+              "start": 17,
+              "end": 22,
+              "score": 0.971010950710118
+            }
+          ]
+        },
+        {
+          "slice": "direct_insult",
+          "text": "Only a moron would believe your argument.",
+          "terms": [
+            "moron"
+          ],
+          "predicted": [
+            {
+              "text": "moron",
+              "start": 7,
+              "end": 12,
+              "score": 0.8002484057782733
+            }
+          ]
+        },
+        {
+          "slice": "direct_insult",
+          "text": "Stop talking, you fool.",
+          "terms": [
+            "fool"
+          ],
+          "predicted": [
+            {
+              "text": "fool",
+              "start": 18,
+              "end": 22,
+              "score": 0.7365688035542015
+            }
+          ]
+        },
+        {
+          "slice": "direct_insult",
+          "text": "That commenter is an arrogant idiot.",
+          "terms": [
+            "arrogant idiot"
+          ],
+          "predicted": [
+            {
+              "text": "arrogant",
+              "start": 21,
+              "end": 29,
+              "score": 0.6377980479061178
+            },
+            {
+              "text": "idiot",
+              "start": 30,
+              "end": 35,
+              "score": 0.9663427264200243
+            }
+          ]
+        },
+        {
+          "slice": "direct_insult",
+          "text": "Your entire team is stupid.",
+          "terms": [
+            "stupid"
+          ],
+          "predicted": [
+            {
+              "text": "stupid",
+              "start": 20,
+              "end": 26,
+              "score": 0.898039110992283
+            }
+          ]
+        },
+        {
+          "slice": "direct_insult",
+          "text": "What an idiotic response from you.",
+          "terms": [
+            "idiotic"
+          ],
+          "predicted": [
+            {
+              "text": "idiotic",
+              "start": 8,
+              "end": 15,
+              "score": 0.8757724982828333
+            }
+          ]
+        },
+        {
+          "slice": "direct_insult",
+          "text": "You are a worthless loser.",
+          "terms": [
+            "worthless loser"
+          ],
+          "predicted": [
+            {
+              "text": "worthless",
+              "start": 10,
+              "end": 19,
+              "score": 0.5808008039374548
+            },
+            {
+              "text": "loser",
+              "start": 20,
+              "end": 25,
+              "score": 0.7230633599770255
+            }
+          ]
+        },
+        {
+          "slice": "direct_insult",
+          "text": "That person is a complete imbecile.",
+          "terms": [
+            "imbecile"
+          ],
+          "predicted": [
+            {
+              "text": "imbecile",
+              "start": 26,
+              "end": 34,
+              "score": 0.8776237178758586
+            }
+          ]
+        }
+      ]
+    },
+    "bert-mini-balanced": {
+      "slices": {
+        "benign": {
+          "examples": 12,
+          "examples_flagged": 0,
+          "expected_positive_examples": 0,
+          "expected_positive_examples_flagged": 0
+        },
+        "benign_identity_mention": {
+          "examples": 10,
+          "examples_flagged": 1,
+          "expected_positive_examples": 0,
+          "expected_positive_examples_flagged": 0
+        },
+        "quotation_or_negation": {
+          "examples": 6,
+          "examples_flagged": 6,
+          "expected_positive_examples": 0,
+          "expected_positive_examples_flagged": 0
+        },
+        "direct_insult": {
+          "examples": 8,
+          "examples_flagged": 8,
+          "expected_positive_examples": 8,
+          "expected_positive_examples_flagged": 8
+        }
+      },
+      "examples": [
+        {
+          "slice": "benign",
+          "text": "Please explain your concerns about the proposal.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "I disagree with the conclusion, but I appreciate the careful analysis.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "The experiment needs a larger sample and a clearer baseline.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "The library opens at nine on Monday morning.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "She saved the document and closed the browser.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "Could you check the arithmetic in the second paragraph?",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "The argument is weak because the evidence is incomplete.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "We can criticize a policy without insulting its supporters.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "The students prepared an English presentation about renewable energy.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "I made an error and corrected it after reviewing the feedback.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "This software has a bug that causes duplicate notifications.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign",
+          "text": "The team should postpone the release until the tests pass.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "The museum has an exhibition on Jewish history and culture.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "Muslim families joined their neighbors at the community garden.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "The article describes the work of Black scientists.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "The accessibility workshop was led by a disabled software engineer.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "A gay couple volunteered to organize the neighborhood picnic.",
+          "terms": [],
+          "predicted": [
+            {
+              "start": 2,
+              "end": 5,
+              "score": 0.7307620202175221,
+              "text": "gay"
+            }
+          ]
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "The researcher interviewed Christian and atheist participants.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "The course includes poetry by women and men from many countries.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "Immigrants contributed recipes to the community cookbook.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "Transgender students are welcome to participate in the workshop.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "benign_identity_mention",
+          "text": "The club supports older adults learning to use a computer.",
+          "terms": [],
+          "predicted": []
+        },
+        {
+          "slice": "quotation_or_negation",
+          "text": "The teacher explained why calling someone an idiot is hurtful.",
+          "terms": [],
+          "predicted": [
+            {
+              "start": 45,
+              "end": 50,
+              "score": 0.9314632832179616,
+              "text": "idiot"
+            },
+            {
+              "start": 54,
+              "end": 61,
+              "score": 0.5814168152262421,
+              "text": "hurtful"
+            }
+          ]
+        },
+        {
+          "slice": "quotation_or_negation",
+          "text": "Please do not describe your classmates as stupid.",
+          "terms": [],
+          "predicted": [
+            {
+              "start": 42,
+              "end": 48,
+              "score": 0.9326335697272625,
+              "text": "stupid"
+            }
+          ]
+        },
+        {
+          "slice": "quotation_or_negation",
+          "text": "The article quotes the word idiot while discussing respectful language.",
+          "terms": [],
+          "predicted": [
+            {
+              "start": 28,
+              "end": 33,
+              "score": 0.9195296786330889,
+              "text": "idiot"
+            }
+          ]
+        },
+        {
+          "slice": "quotation_or_negation",
+          "text": "Nobody here is a moron; we simply have different information.",
+          "terms": [],
+          "predicted": [
+            {
+              "start": 17,
+              "end": 22,
+              "score": 0.9404948735588405,
+              "text": "moron"
+            }
+          ]
+        },
+        {
+          "slice": "quotation_or_negation",
+          "text": "A moderator removed the comment that called the author a fool.",
+          "terms": [],
+          "predicted": [
+            {
+              "start": 57,
+              "end": 61,
+              "score": 0.9139048462440384,
+              "text": "fool"
+            }
+          ]
+        },
+        {
+          "slice": "quotation_or_negation",
+          "text": "The dictionary includes an entry for the word stupid.",
+          "terms": [],
+          "predicted": [
+            {
+              "start": 46,
+              "end": 52,
+              "score": 0.9557374755849881,
+              "text": "stupid"
+            }
+          ]
+        },
+        {
+          "slice": "direct_insult",
+          "text": "You are a stupid idiot.",
+          "terms": [
+            "stupid",
+            "idiot"
+          ],
+          "predicted": [
+            {
+              "start": 10,
+              "end": 16,
+              "score": 0.9505164669912901,
+              "text": "stupid"
+            },
+            {
+              "start": 17,
+              "end": 22,
+              "score": 0.9629269531493475,
+              "text": "idiot"
+            }
+          ]
+        },
+        {
+          "slice": "direct_insult",
+          "text": "Only a moron would believe your argument.",
+          "terms": [
+            "moron"
+          ],
+          "predicted": [
+            {
+              "start": 7,
+              "end": 12,
+              "score": 0.9313203503388003,
+              "text": "moron"
+            }
+          ]
+        },
+        {
+          "slice": "direct_insult",
+          "text": "Stop talking, you fool.",
+          "terms": [
+            "fool"
+          ],
+          "predicted": [
+            {
+              "start": 18,
+              "end": 22,
+              "score": 0.8220598062715054,
+              "text": "fool"
+            }
+          ]
+        },
+        {
+          "slice": "direct_insult",
+          "text": "That commenter is an arrogant idiot.",
+          "terms": [
+            "arrogant idiot"
+          ],
+          "predicted": [
+            {
+              "start": 21,
+              "end": 29,
+              "score": 0.6888258978369147,
+              "text": "arrogant"
+            },
+            {
+              "start": 30,
+              "end": 35,
+              "score": 0.9470212538590268,
+              "text": "idiot"
+            }
+          ]
+        },
+        {
+          "slice": "direct_insult",
+          "text": "Your entire team is stupid.",
+          "terms": [
+            "stupid"
+          ],
+          "predicted": [
+            {
+              "start": 20,
+              "end": 26,
+              "score": 0.9717729019762192,
+              "text": "stupid"
+            }
+          ]
+        },
+        {
+          "slice": "direct_insult",
+          "text": "What an idiotic response from you.",
+          "terms": [
+            "idiotic"
+          ],
+          "predicted": [
+            {
+              "start": 8,
+              "end": 15,
+              "score": 0.9319599765828405,
+              "text": "idiotic"
+            }
+          ]
+        },
+        {
+          "slice": "direct_insult",
+          "text": "You are a worthless loser.",
+          "terms": [
+            "worthless loser"
+          ],
+          "predicted": [
+            {
+              "start": 10,
+              "end": 19,
+              "score": 0.940230143755857,
+              "text": "worthless"
+            },
+            {
+              "start": 20,
+              "end": 25,
+              "score": 0.9371020611851271,
+              "text": "loser"
+            }
+          ]
+        },
+        {
+          "slice": "direct_insult",
+          "text": "That person is a complete imbecile.",
+          "terms": [
+            "imbecile"
+          ],
+          "predicted": [
+            {
+              "start": 26,
+              "end": 34,
+              "score": 0.9280510790106656,
+              "text": "imbecile"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "profile": "balanced",
+  "assets": [
+    {
+      "model": "linear-balanced",
+      "filename": "config.json",
+      "bytes": 231,
+      "sha256": "dc63bd4d630fa427c0edced90633a576305013bbac72d7ee7984c7a36a32c32e"
+    },
+    {
+      "model": "linear-balanced",
+      "filename": "weights.int8",
+      "bytes": 65536,
+      "sha256": "9fbc32bb1b15de162764ade93bb9fe37ebdfcac776310745300d428178b4daee"
+    },
+    {
+      "model": "bert-mini-balanced",
+      "filename": "inference.json",
+      "bytes": 199,
+      "sha256": "0c498b9ecae773da6a1c4d6c552d3760cde131218704fa917bd8072260d0d284"
+    },
+    {
+      "model": "bert-mini-balanced",
+      "filename": "model.int8.onnx",
+      "bytes": 11351057,
+      "sha256": "ffa249fb1d48994b8470183d873fb40bb96e7090be1e15363fc584603cdf3e6c"
+    }
+  ]
+}

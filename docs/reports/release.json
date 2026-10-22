@@ -1,0 +1,61 @@
+{
+  "version": 2,
+  "mode": "explicit opt-in review only",
+  "automatic_filter_gate_passed": false,
+  "memory_gate_passed": false,
+  "worker_sha256": "ce0e5cb056b67ec46e8e18ec343247b5f1993111e18d90192ca3360013f4c02b",
+  "dataset_profile": "balanced",
+  "models": [
+    {
+      "id": "linear-balanced",
+      "label": "Fastest · balanced character-context · 64 KiB weights",
+      "weight_bytes": 65536,
+      "assets": [
+        {
+          "model": "linear-balanced",
+          "filename": "config.json",
+          "bytes": 231,
+          "sha256": "dc63bd4d630fa427c0edced90633a576305013bbac72d7ee7984c7a36a32c32e"
+        },
+        {
+          "model": "linear-balanced",
+          "filename": "weights.int8",
+          "bytes": 65536,
+          "sha256": "9fbc32bb1b15de162764ade93bb9fe37ebdfcac776310745300d428178b4daee"
+        }
+      ],
+      "browser_report": "balanced-browser-evaluation.json",
+      "benchmark_report": "balanced-browser-benchmark.json",
+      "diagnostic_report": "balanced-challenge.json"
+    },
+    {
+      "id": "bert-mini-balanced",
+      "label": "Contextual · balanced BERT Mini INT8 · 10.8 MiB weights",
+      "weight_bytes": 11351057,
+      "assets": [
+        {
+          "model": "bert-mini-balanced",
+          "filename": "inference.json",
+          "bytes": 199,
+          "sha256": "0c498b9ecae773da6a1c4d6c552d3760cde131218704fa917bd8072260d0d284"
+        },
+        {
+          "model": "bert-mini-balanced",
+          "filename": "model.int8.onnx",
+          "bytes": 11351057,
+          "sha256": "ffa249fb1d48994b8470183d873fb40bb96e7090be1e15363fc584603cdf3e6c"
+        }
+      ],
+      "browser_report": "balanced-browser-evaluation.json",
+      "benchmark_report": "balanced-browser-benchmark.json",
+      "diagnostic_report": "balanced-challenge.json"
+    }
+  ],
+  "limitations": [
+    "Automatic precision and independently low benign-false-positive gates remain unmet.",
+    "No full native/process memory bound is claimed.",
+    "Quoted words remain difficult; diagnostics must not be described as solved.",
+    "No OCR, video or audio censorship."
+  ],
+  "legacy": "Original weights and first-release reports remain available for research comparison; they are not the selected default models."
+}

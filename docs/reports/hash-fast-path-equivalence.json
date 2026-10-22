@@ -1,0 +1,17 @@
+{
+  "optimization": "ASCII FNV-1a fast path; UTF-8 fallback unchanged",
+  "before_worker_sha256": "221fb7bf42b8dba3d5582f76f02d383c1c108792a5576d40618563fb3a44ff6f",
+  "after_worker_sha256": "ce0e5cb056b67ec46e8e18ec343247b5f1993111e18d90192ca3360013f4c02b",
+  "models": {
+    "linear-balanced": {
+      "examples": 7000,
+      "prediction_mismatches": 0,
+      "display_mismatches": 0
+    },
+    "bert-mini-balanced": {
+      "examples": 7000,
+      "prediction_mismatches": 0,
+      "display_mismatches": 0
+    }
+  }
+}

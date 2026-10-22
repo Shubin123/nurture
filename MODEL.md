@@ -1,8 +1,8 @@
 # Nurture English models · trained research release
 
-Three candidates are trained, exported and evaluated locally, and available in the website's explicit-download model lab. This is **not an autonomous safety-filter release**: precision and independently validated benign-false-positive gates remain unmet. No private tabs, streams or customer content were used for training.
+Five variants are trained, exported and evaluated locally: the initial three models plus balanced-context character and Mini variants. The two balanced variants are selected in the website's explicit-download model lab, with versioned asset URLs. This is **not an autonomous safety-filter release**: precision and independently validated benign-false-positive gates remain unmet. No private tabs, streams or customer content were used for training.
 
-## Candidates
+## Initial comparison candidates (archived)
 
 | Model | Training | Quantized artifact | Role |
 | --- | --- | --- | --- |
@@ -24,7 +24,7 @@ The purpose-written `ml/challenge.json` separately probes benign language, ident
 
 ## Evidence
 
-See [measured results](docs/reports/RESULTS.md), [native evaluation](docs/reports/evaluation.json), [full browser evaluation](docs/reports/browser-evaluation.json) and [browser benchmarks](docs/reports/browser-benchmark.json). All 2,000 held-out comments run through the actual served browser worker, not just a Python surrogate.
+See [current measured results](docs/reports/RESULTS.md), [balanced native evaluation](docs/reports/balanced-evaluation.json), [full balanced browser evaluation](docs/reports/balanced-browser-evaluation.json) and [browser benchmarks](docs/reports/balanced-browser-benchmark.json). Both selected models run all 7,000 test comments through the actual compiled browser worker, not just a Python surrogate. Unprefixed reports preserve the initial three-model experiment and its earlier worker fingerprint; they are not current-release measurements.
 
 Reports distinguish macro per-document character F1, micro character precision/recall, exact character-set agreement, empty-gold prediction rates and length slices. Confidence intervals bootstrap whole documents 1,000 times rather than treating dependent characters as independent samples. They describe this dataset, not deployment guarantees. Expanding subwords to displayed whole words has separate metrics; it cannot silently inherit subword accuracy.
 
@@ -34,6 +34,7 @@ Speed reports name hardware, OS, browser/runtime versions, thread count, warmups
 
 - INT8 MatMul and embedding/Gather weights reduce neural files roughly fourfold; quantized accuracy is independently evaluated. Smaller is not uniformly faster on native CPU, and no universal speedup is claimed.
 - Share one vocabulary and pinned, self-hosted WASM runtime. The character model does not initialize WASM. No inference text is uploaded.
+- Allocation-free ASCII hashing preserves the UTF-8 fallback. Unit vectors and 14,000 before/after model-document comparisons produce identical token spans and displayed-word decisions. The repeated 1,024-token character workload improves from approximately 106,000 to 418,000 useful tokens/s on the reference M4; timing noise and workload dependence remain.
 - Run off the main thread with a fixed 128-position sequence dimension, bounded batches of eight and single-thread CPU/WASM. No GPU or cross-origin isolation is required. Batch sweeps are published; small noisy differences are not advertised as wins.
 - Bound inputs to 50,000 characters and handle all chunks. Stop/unload terminates the worker and clears its output. Explicit model consent is revocable; public weights may remain in normal browser caches.
 - The 150 MB additional-memory target is **not proven**. Whole-Chrome RSS sampling is a noisy process-tree proxy, not per-model allocation. Runtime overhead exceeds weight size; no mobile-memory claim is made.
@@ -46,7 +47,11 @@ The extension remains deterministic: it does not silently load models or broaden
 
 ## Balanced-data follow-up
 
-A second local experiment adds pinned, human-rated zero-toxicity Civil Comments examples without increasing model architecture sizes. Its native evaluation substantially reduces rated-negative false positives; details, sampling caveats and the measured recall/F1 tradeoff are in [ml/EXPERIMENTS.md](ml/EXPERIMENTS.md) and [the comparison report](docs/reports/balanced-evaluation.json). These candidates are **not deployed yet**: full browser evaluation, diagnostics and efficiency verification remain required before promotion. The automatic-filter gate is still unmet and the overall improvement work remains active.
+A second experiment adds pinned, human-rated zero-toxicity Civil Comments examples without increasing architecture sizes. Mixed splits contain 17,917 train, 2,689 validation and 7,000 test examples. Mini trains six epochs at learning rate 0.00005 and selects epoch 4; validation-selected thresholds are 0.275 (character) and 0.40 (Mini). Selection maximizes the equal-weight mean of span F1 and rated-negative acceptance. Details are in [ml/EXPERIMENTS.md](ml/EXPERIMENTS.md).
+
+The balanced variants are now selected as **review-only**, after full browser accuracy, diagnostics and efficiency verification. Browser span F1 / rated-negative post FPR are 0.6501 / 4.06% (character) and 0.6402 / 3.88% (Mini). Native Mini differs slightly (0.6475 / 3.12%); do not substitute native numbers for browser behavior. Both models falsely flag all six quotation/negation diagnostics. The original span test was previously inspected and reused, not a fresh independent final holdout; the 5,000 supplemental negative controls were frozen without tuning. The automatic-filter gate remains unmet.
+
+`docs/reports/release.json` binds the selected versioned assets to browser evidence. Original assets remain available for research comparison. Worker heap/backing-storage samples in `balanced-worker-memory.json` exclude important native/WASM allocations and do not prove the total-memory target.
 
 ## Reproduce
 
@@ -59,7 +64,7 @@ npm ci
 sh scripts/train-models.sh
 ```
 
-This downloads pinned public revisions, verifies dataset hashes, trains all candidates, selects on validation, exports, checks PyTorch/ONNX parity, evaluates FP32/INT8, checks tokenization and runs unit tests. No paid cloud jobs are launched. The dataset contains offensive language. MPS is preferred when available, otherwise CPU is used.
+This reproduces the **initial three-model experiment**, not the balanced defaults: pinned public data, validation selection, exports, PyTorch/ONNX parity, FP32/INT8 evaluation and tests. Balanced training and candidate promotion commands are in `ml/EXPERIMENTS.md`. No paid cloud jobs are launched. The dataset contains offensive language. MPS is preferred when available, otherwise CPU is used.
 
 Serve `docs/` in another terminal with `python3 -m http.server 8000 --directory docs`. Set `CHROME_PATH` for a non-default Chrome location. Stop other heavy jobs; run measurements sequentially:
 
@@ -74,13 +79,14 @@ node scripts/manifest-models.mjs
 .venv/bin/python ml/render_report.py
 ```
 
-Browser tests use real CPU/WASM inference; capture denial is mocked, not cross-platform real-capture evidence. Tokenizer conformance covers token IDs, Unicode offsets and hashed features on 695 validation/diagnostic fixtures. Export checks compare FP32 ONNX against PyTorch; full quantized accuracy is evaluated separately.
+After promotion, default browser scripts evaluate the served selected models and write `release-*` reports; the candidate protocol writes `balanced-*` reports and preserves initial evidence. The results renderer uses the frozen balanced release reports. Browser tests use real CPU/WASM inference; capture denial is mocked, not cross-platform real-capture evidence. Tokenizer conformance covers token IDs, Unicode offsets and hashed features on 695 original and 2,695 balanced validation/diagnostic fixtures. Export checks compare FP32 ONNX against PyTorch; full quantized accuracy is evaluated separately.
 
 Pages publishes committed artifacts from `main` → `/docs`, without a custom Actions workflow. Artifact hashes are in `docs/reports/artifacts.json`. No claim of signed model releases is made.
 
 ## Upstream sources and licenses
 
 - Dataset: https://github.com/ipavlopoulos/toxic_spans — pinned SemEval-2021 subset. See the ACL2022 README for empty-span interpretation.
+- Supplemental rated-negative data: https://huggingface.co/datasets/google/civil_comments — pinned revision and source-specific rating/sampling caveats in `ml/EXPERIMENTS.md`.
 - Tiny: https://huggingface.co/google/bert_uncased_L-2_H-128_A-2
 - Mini: https://huggingface.co/google/bert_uncased_L-4_H-256_A-4
 - Quantization: https://onnxruntime.ai/docs/performance/model-optimizations/quantization.html

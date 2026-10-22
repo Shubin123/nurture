@@ -18,6 +18,21 @@
       "sha256": "553e43a9d0366c4b8979212bdeb448d44d9e0022e4f7cf48e318aa4be2768c1d"
     },
     {
+      "path": "models/bert-mini-balanced/config.json",
+      "bytes": 785,
+      "sha256": "85bed80cee35cf77e85a474ca1d2b2200a85cd237dc1d7a5e4441bee17662445"
+    },
+    {
+      "path": "models/bert-mini-balanced/inference.json",
+      "bytes": 199,
+      "sha256": "0c498b9ecae773da6a1c4d6c552d3760cde131218704fa917bd8072260d0d284"
+    },
+    {
+      "path": "models/bert-mini-balanced/model.int8.onnx",
+      "bytes": 11351057,
+      "sha256": "ffa249fb1d48994b8470183d873fb40bb96e7090be1e15363fc584603cdf3e6c"
+    },
+    {
       "path": "models/bert-tiny/config.json",
       "bytes": 784,
       "sha256": "c92fd6672b80f011361e66f558ca7759a288837f39bce4f54e4b56a42c8112c9"
@@ -41,6 +56,16 @@
       "path": "models/linear/weights.int8",
       "bytes": 65536,
       "sha256": "3d493f6bfdc9d9ac46795113dd18b8c27f9468b753dcb4c134a1e3a3d12769d3"
+    },
+    {
+      "path": "models/linear-balanced/config.json",
+      "bytes": 231,
+      "sha256": "dc63bd4d630fa427c0edced90633a576305013bbac72d7ee7984c7a36a32c32e"
+    },
+    {
+      "path": "models/linear-balanced/weights.int8",
+      "bytes": 65536,
+      "sha256": "9fbc32bb1b15de162764ade93bb9fe37ebdfcac776310745300d428178b4daee"
     },
     {
       "path": "models/vocab.txt",
@@ -69,8 +94,8 @@
     },
     {
       "path": "model-worker.js",
-      "bytes": 78007,
-      "sha256": "221fb7bf42b8dba3d5582f76f02d383c1c108792a5576d40618563fb3a44ff6f"
+      "bytes": 78201,
+      "sha256": "ce0e5cb056b67ec46e8e18ec343247b5f1993111e18d90192ca3360013f4c02b"
     },
     {
       "path": "model-worker.js.LEGAL.txt",

@@ -10,7 +10,11 @@ try {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto(baseUrl);
-  await page.waitForFunction(() => document.querySelector('#model-results').querySelectorAll('tr').length === 3);
+  await page.waitForFunction(() => document.querySelector('#model-results').querySelectorAll('tr').length === 2);
+  const release = await page.evaluate(async () => (await fetch('reports/release.json')).json());
+  assert.deepEqual(await page.locator('#model-choice option').evaluateAll(options => options.map(option => option.value)), release.models.map(model => model.id));
+  assert.equal(release.automatic_filter_gate_passed, false);
+  assert.equal(release.memory_gate_passed, false);
   assert.equal(requests.some(request => new URL(request.url).pathname.includes('/models/')), false);
   assert.equal(await page.locator('#output sup').count(), 2);
   await page.locator('#load-model').click();
@@ -26,7 +30,7 @@ try {
   await page.locator('#unload-model').click();
   assert.equal(await page.locator('#run-model').isDisabled(), true);
   assert.equal(await page.locator('#model-output').innerText(), '');
-  await page.locator('#model-choice').selectOption('bert-tiny');
+  await page.locator('#model-choice').selectOption('bert-mini-balanced');
   await page.locator('#load-model').click();
   await page.waitForFunction(() => !document.querySelector('#run-model').disabled, null, { timeout: 120000 });
   await page.locator('#run-model').click();

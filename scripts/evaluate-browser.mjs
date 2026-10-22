@@ -1,12 +1,14 @@
 import { chromium } from 'playwright';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
+import { profile, modelNames, prefix, dataPath, profileEvidence, configureProfile } from './model-profile.mjs';
 
-const rows = readFileSync('ml/data/test.jsonl', 'utf8').trim().split('\n').map(line => JSON.parse(line));
+const rows = readFileSync(dataPath, 'utf8').trim().split('\n').map(line => JSON.parse(line));
 const predictions = {};
 const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true });
 try {
   const page = await browser.newPage();
+  await configureProfile(page.context());
   await page.goto(process.env.BASE_URL || 'http://localhost:8000');
   await page.evaluate(() => {
     window.evaluationWorker = new Worker('model-worker.js', { type: 'module' });
@@ -25,7 +27,7 @@ try {
       window.evaluationWorker.postMessage({ id: request, action, ...values });
     });
   });
-  for (const name of ['linear', 'bert-tiny', 'bert-mini']) {
+  for (const name of modelNames) {
     await page.evaluate(name => window.evaluateCall('load', { name }), name);
     const model = [];
     for (let index = 0; index < rows.length; index += 1) {
@@ -52,7 +54,7 @@ try {
       if ((index + 1) % 500 === 0) console.log(name, index + 1, '/', rows.length);
     }
     predictions[name] = model;
-    writeFileSync('ml/runs/browser-predictions.json', JSON.stringify({ worker_sha256: createHash('sha256').update(readFileSync('docs/model-worker.js')).digest('hex'), browser: await browser.version(), models: predictions }));
+    writeFileSync(`ml/runs/${prefix}browser-predictions.json`, JSON.stringify({ ...profileEvidence(), worker_sha256: createHash('sha256').update(readFileSync('docs/model-worker.js')).digest('hex'), browser: await browser.version(), models: predictions }));
   }
 } finally {
   await browser.close();

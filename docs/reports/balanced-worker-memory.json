@@ -1,0 +1,127 @@
+{
+  "profile": "balanced",
+  "assets": [
+    {
+      "model": "linear-balanced",
+      "filename": "config.json",
+      "bytes": 231,
+      "sha256": "dc63bd4d630fa427c0edced90633a576305013bbac72d7ee7984c7a36a32c32e"
+    },
+    {
+      "model": "linear-balanced",
+      "filename": "weights.int8",
+      "bytes": 65536,
+      "sha256": "9fbc32bb1b15de162764ade93bb9fe37ebdfcac776310745300d428178b4daee"
+    },
+    {
+      "model": "bert-mini-balanced",
+      "filename": "inference.json",
+      "bytes": 199,
+      "sha256": "0c498b9ecae773da6a1c4d6c552d3760cde131218704fa917bd8072260d0d284"
+    },
+    {
+      "model": "bert-mini-balanced",
+      "filename": "model.int8.onnx",
+      "bytes": 11351057,
+      "sha256": "ffa249fb1d48994b8470183d873fb40bb96e7090be1e15363fc584603cdf3e6c"
+    }
+  ],
+  "worker_sha256": "ce0e5cb056b67ec46e8e18ec343247b5f1993111e18d90192ca3360013f4c02b",
+  "scope": "Experimental Chrome Runtime.getHeapUsage for the model worker: V8 heap, embedder and backing storage. Not a complete process/native allocation measurement, a sampled bound or a portable memory guarantee.",
+  "models": {
+    "linear-balanced": {
+      "browser": "155.0.8059.85",
+      "samples": [
+        {
+          "stage": "worker_before_model_load",
+          "usedSize": 414316,
+          "totalSize": 1048576,
+          "embedderHeapUsedSize": 773712,
+          "backingStorageSize": 78295
+        },
+        {
+          "stage": "after_model_load",
+          "usedSize": 448624,
+          "totalSize": 1048576,
+          "embedderHeapUsedSize": 773712,
+          "backingStorageSize": 144190
+        },
+        {
+          "stage": "after_5_sentence_repetitions",
+          "usedSize": 826968,
+          "totalSize": 2359296,
+          "embedderHeapUsedSize": 773712,
+          "backingStorageSize": 144190
+        },
+        {
+          "stage": "after_40_sentence_repetitions",
+          "usedSize": 891000,
+          "totalSize": 4194304,
+          "embedderHeapUsedSize": 773712,
+          "backingStorageSize": 144190
+        },
+        {
+          "stage": "after_1000_sentence_repetitions",
+          "usedSize": 2595724,
+          "totalSize": 6815744,
+          "embedderHeapUsedSize": 773712,
+          "backingStorageSize": 144190
+        },
+        {
+          "stage": "after_forced_gc_resident_only",
+          "usedSize": 432936,
+          "totalSize": 1572864,
+          "embedderHeapUsedSize": 25376,
+          "backingStorageSize": 143831
+        }
+      ]
+    },
+    "bert-mini-balanced": {
+      "browser": "155.0.8059.85",
+      "samples": [
+        {
+          "stage": "worker_before_model_load",
+          "usedSize": 414316,
+          "totalSize": 1048576,
+          "embedderHeapUsedSize": 773712,
+          "backingStorageSize": 78295
+        },
+        {
+          "stage": "after_model_load",
+          "usedSize": 3096592,
+          "totalSize": 7979008,
+          "embedderHeapUsedSize": 28872,
+          "backingStorageSize": 11453966
+        },
+        {
+          "stage": "after_5_sentence_repetitions",
+          "usedSize": 3365072,
+          "totalSize": 8241152,
+          "embedderHeapUsedSize": 470096,
+          "backingStorageSize": 106481
+        },
+        {
+          "stage": "after_40_sentence_repetitions",
+          "usedSize": 4303816,
+          "totalSize": 8241152,
+          "embedderHeapUsedSize": 470096,
+          "backingStorageSize": 122769
+        },
+        {
+          "stage": "after_1000_sentence_repetitions",
+          "usedSize": 7577204,
+          "totalSize": 14794752,
+          "embedderHeapUsedSize": 470096,
+          "backingStorageSize": 436015
+        },
+        {
+          "stage": "after_forced_gc_resident_only",
+          "usedSize": 3350768,
+          "totalSize": 4046848,
+          "embedderHeapUsedSize": 28872,
+          "backingStorageSize": 102784
+        }
+      ]
+    }
+  }
+}

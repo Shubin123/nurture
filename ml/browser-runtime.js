@@ -2,7 +2,15 @@ const encoder = new TextEncoder();
 
 export function hash(value) {
   let result = 2166136261;
-  for (const byte of encoder.encode(value)) result = Math.imul(result ^ byte, 16777619) >>> 0;
+  for (let index = 0; index < value.length; index += 1) {
+    const code = value.charCodeAt(index);
+    if (code > 127) {
+      result = 2166136261;
+      for (const byte of encoder.encode(value)) result = Math.imul(result ^ byte, 16777619) >>> 0;
+      return result % 65536;
+    }
+    result = Math.imul(result ^ code, 16777619) >>> 0;
+  }
   return result % 65536;
 }
 

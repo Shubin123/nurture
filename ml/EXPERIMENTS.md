@@ -1,6 +1,6 @@
 # Balanced-context follow-up experiment
 
-The first research release is committed and deployed. It includes three genuinely trained models, native FP32/INT8 evaluation, full held-out browser evaluation, throughput and explicit unmet production gates. Its diagnostics flag identity mentions and quoted insults too often. The goal remains active while improving useful context handling rather than calling raw throughput sufficient.
+The initial three-model research release remains archived. The balanced character and Mini variants have now passed the full browser research verification below and are selected as explicit opt-in review tools, not production safety filters. Identity mentions and quoted insults remain important failure modes.
 
 ## Follow-up protocol
 
@@ -24,7 +24,7 @@ The first research release is committed and deployed. It includes three genuinel
 
 The initial release's reproduction commands retain their `original` defaults. Profiles do not overwrite original checkpoints or reports. GPU training and heavy performance benchmarks should not run concurrently. After training, revalidate the process/job state, evaluate frozen candidates, inspect both toxic-span recall and rated-negative false positives, then decide from evidence whether to promote, refine or reject the candidates. Do not mark the overall goal complete solely because model files exist or one timing test passes.
 
-## Native results and remaining work
+## Native results
 
 Training and quantized native evaluation completed. `docs/reports/balanced-evaluation.json` records the comparison on 2,000 reused span-test comments and 5,000 newly frozen rated-negative controls:
 
@@ -37,6 +37,33 @@ Training and quantized native evaluation completed. `docs/reports/balanced-evalu
 
 The character candidate improves both measures in this comparison. Mini reduces false positives substantially with a modest span-F1 tradeoff. File sizes remain 65,536 bytes of character weights and 11,351,057 bytes for Mini's quantized ONNX model. These rates still do not meet the proposed automatic-filter gate. The mixed-data aggregate F1 must not be advertised as generic browsing accuracy.
 
-**Next critical path:** run the candidate weights/configurations through the actual browser worker on the mixed test set, repeat the benign/identity/quotation diagnostics, benchmark latency/throughput without concurrent training, and only then decide whether to promote. Candidate exports remain in `ml/runs/candidate-models/linear-balanced/` and `ml/runs/candidate-models/bert-mini-balanced/`. The deployed website still serves the original research models. Test runner `tests/browser.mjs` supports `BASE_URL` and has passed against the public Pages site.
+## Browser verification and promotion
 
-The first release's asset manifest and benchmark fingerprints still refer to the original deployed models. Do not overwrite their reports or relabel their timing as measurements of the balanced candidates. If promoting, preserve the original evidence, regenerate the deployment manifest and corresponding browser reports, rerun all tests, and publish via branch-based Pages without a custom Actions workflow or agent commit attribution.
+Both models ran all 7,000 test comments through the actual compiled worker, with candidate assets intercepted from local private export paths and SHA-256 bound to reports. Browser span F1 / negative-post FPR are 0.6501 / 4.06% (character) and 0.6402 / 3.88% (Mini). Mini's browser/native difference is reported, not hidden. Both models flag all six quotation/negation probes; identity probes flag 2/10 and 1/10 respectively. Small authored diagnostics do not validate fairness.
+
+An ASCII fast path avoids UTF-8 allocation when hashing English features; non-ASCII uses the original UTF-8 algorithm. All 14,000 before/after predictions and displayed-word expansions agree exactly. On the reference M4, the character model's 1,024-token warm workload measures approximately 418,000 useful tokens/s versus 106,000 before this optimization. Mini measures approximately 3,822/s; no Mini speedup is claimed. Warm 128-token p95 worker latency is 0.4 ms / 46.7 ms respectively. These are local CPU measurements, not mobile guarantees or Internet download timings.
+
+`node scripts/verify-fast-path.mjs` reproduces the equivalence audit using the ignored pre-optimization and optimized prediction files. To recreate the baseline, evaluate the same frozen candidate weights with the earlier compiled worker before applying the ASCII fast path; do not substitute the original unbalanced weights. Public reports retain only aggregate outcomes, runtime fingerprints and timings, not raw corpus text.
+
+Whole-Chrome RSS and worker heap/backing-storage sampling are published, but neither proves a complete native/WASM allocation bound. The 150 MB gate remains unproven. Automatic-filter gates also remain unmet: both negative false-positive rates exceed 0.5%, and quoted language is not solved. No OCR, audio or video filtering is implemented.
+
+```sh
+.venv/bin/python ml/browser_fixtures.py --profile balanced
+node tests/tokenizer-conformance.mjs balanced
+npm run build
+MODEL_PROFILE=balanced node scripts/evaluate-browser.mjs
+.venv/bin/python ml/report_browser.py --profile balanced
+MODEL_PROFILE=balanced node scripts/evaluate-challenge.mjs
+MODEL_PROFILE=balanced node scripts/benchmark-browser.mjs
+MODEL_PROFILE=balanced node scripts/worker-memory.mjs
+node scripts/promote-candidates.mjs
+node scripts/manifest-models.mjs
+node scripts/verify-artifacts.mjs
+.venv/bin/python ml/render_report.py
+npm test
+npm run test:browser
+```
+
+Promotion checks validation-objective improvement, frozen selection, browser/native consistency, diagnostic presence, latency, file size and asset/runtime fingerprints before copying to versioned `docs/models/linear-balanced/` and `docs/models/bert-mini-balanced/` paths. It does not assert safety or total-memory gates. `release.json` records both as false. The initial models and unprefixed browser reports preserve their original fingerprints; current release evidence has `balanced-` prefixes. Default deployed-profile harnesses read the release manifest, request actual served assets without interception and write `release-*` reports. Publication stays branch-based Pages without custom Actions workflows or agent commit attribution.
+
+Next research requires independently adjudicated quotations/context, a fresh span holdout and representative dialect/domain validation before any automatic-policy claim. Accuracy, privacy and consent take priority over throughput alone.

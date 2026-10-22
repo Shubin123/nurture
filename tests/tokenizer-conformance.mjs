@@ -3,7 +3,8 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { WordPiece, linearTokens, linearFeatures } from '../ml/browser-runtime.js';
 
 const tokenizer = new WordPiece(readFileSync('docs/models/vocab.txt', 'utf8'));
-const fixtures = JSON.parse(readFileSync('ml/runs/tokenizer-fixtures.json', 'utf8'));
+const suffix = process.argv[2] === 'balanced' ? '-balanced' : '';
+const fixtures = JSON.parse(readFileSync(`ml/runs/tokenizer-fixtures${suffix}.json`, 'utf8'));
 const mismatches = [];
 for (const [index, fixture] of fixtures.entries()) {
   const codepoints = new Map();
@@ -25,6 +26,6 @@ for (const [index, fixture] of fixtures.entries()) {
   }
 }
 const report = { fixtures: fixtures.length, mismatches: mismatches.length, details: mismatches };
-writeFileSync('docs/reports/tokenizer-conformance.json', JSON.stringify(report, null, 2) + '\n');
+writeFileSync(`docs/reports/tokenizer-conformance${suffix}.json`, JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify(report, null, 2));
 assert.equal(mismatches.length, 0, 'Browser/Python tokenization mismatch.');

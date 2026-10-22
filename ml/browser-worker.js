@@ -14,14 +14,14 @@ async function fetchAsset(path, type = 'json') {
 }
 
 async function load(name) {
-  if (!['linear', 'bert-tiny', 'bert-mini'].includes(name)) throw new Error('Unknown model.');
+  if (!['linear', 'bert-tiny', 'bert-mini', 'linear-balanced', 'bert-mini-balanced'].includes(name)) throw new Error('Unknown model.');
   if (activeName === name) return { cached: true, model: name, threshold: model.config.threshold };
   if (model?.session) await model.session.release();
   model = null;
   activeName = null;
   const started = performance.now();
-  if (name === 'linear') {
-    const [config, buffer] = await Promise.all([fetchAsset('models/linear/config.json'), fetchAsset('models/linear/weights.int8', 'arrayBuffer')]);
+  if (name.startsWith('linear')) {
+    const [config, buffer] = await Promise.all([fetchAsset(`models/${name}/config.json`), fetchAsset(`models/${name}/weights.int8`, 'arrayBuffer')]);
     model = new LinearModel(config, new Int8Array(buffer));
   } else {
     const [config, vocabulary, buffer] = await Promise.all([fetchAsset(`models/${name}/inference.json`), fetchAsset('models/vocab.txt', 'text'), fetchAsset(`models/${name}/model.int8.onnx`, 'arrayBuffer')]);
@@ -29,7 +29,7 @@ async function load(name) {
     model = { config, tokenizer: new WordPiece(vocabulary), session };
   }
   activeName = name;
-  return { model: name, load_ms: performance.now() - started, threshold: model.config.threshold, runtime: name === 'linear' ? 'JavaScript CPU; no WASM initialization or remote inference' : 'single-threaded CPU / WASM; no remote inference' };
+  return { model: name, load_ms: performance.now() - started, threshold: model.config.threshold, runtime: name.startsWith('linear') ? 'JavaScript CPU; no WASM initialization or remote inference' : 'single-threaded CPU / WASM; no remote inference' };
 }
 
 async function neuralPredict(text, batchSize = 8) {
@@ -73,8 +73,8 @@ async function predict(text, batchSize = model?.config.batch_size || 8) {
   if (!model) throw new Error('Load a model first.');
   if (typeof text !== 'string' || text.length > 50000) throw new Error('Use at most 50,000 characters.');
   const started = performance.now();
-  const tokens = activeName === 'linear' ? model.predict(text) : await neuralPredict(text, batchSize);
-  return { model: activeName, tokens, words: activeName === 'linear' ? tokens : mergeWordPieces(text, tokens), threshold: model.config.threshold, elapsed_ms: performance.now() - started };
+  const tokens = activeName.startsWith('linear') ? model.predict(text) : await neuralPredict(text, batchSize);
+  return { model: activeName, tokens, words: activeName.startsWith('linear') ? tokens : mergeWordPieces(text, tokens), threshold: model.config.threshold, elapsed_ms: performance.now() - started };
 }
 
 self.onmessage = event => {

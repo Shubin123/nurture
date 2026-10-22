@@ -1,13 +1,16 @@
 import { chromium } from 'playwright';
 import { readFileSync, writeFileSync } from 'node:fs';
+import { modelNames, prefix, profileEvidence, configureProfile } from './model-profile.mjs';
 
 const challenge = JSON.parse(readFileSync('ml/challenge.json', 'utf8'));
 const report = { provenance: challenge.provenance, annotation: challenge.annotation, models: {} };
+Object.assign(report, profileEvidence());
 const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true });
 try {
   const page = await browser.newPage();
+  await configureProfile(page.context());
   await page.goto(process.env.BASE_URL || 'http://localhost:8000');
-  for (const name of ['linear', 'bert-tiny', 'bert-mini']) {
+  for (const name of modelNames) {
     const predictions = await page.evaluate(async ({ name, examples }) => {
       const worker = new Worker('model-worker.js', { type: 'module' });
       let id = 0;
@@ -47,7 +50,7 @@ try {
     }
     report.models[name] = { slices, examples: challenge.examples.map((example, index) => ({ ...example, predicted: predictions[index] })) };
   }
-  writeFileSync('docs/reports/challenge.json', JSON.stringify(report, null, 2) + '\n');
+  writeFileSync(`docs/reports/${prefix}challenge.json`, JSON.stringify(report, null, 2) + '\n');
   console.log(JSON.stringify(Object.fromEntries(Object.entries(report.models).map(([name, value]) => [name, value.slices])), null, 2));
 } finally {
   await browser.close();

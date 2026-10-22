@@ -4,9 +4,9 @@ Consent-first blue-team prototype for local English word replacement. Each chang
 
 - **Website:** https://shubin123.github.io/nurture/ — working rule-based text demo and explicit browser stream picker. Shared video is an **unfiltered preview**, not censored output.
 - **Extension:** [installation instructions](extension/README.md) — explicitly enable replacements on an authorized current tab, with stop/restore controls.
-- **Models:** [MODEL.md](MODEL.md) — trained character-context, BERT Tiny and BERT Mini candidates with INT8 exports, full browser evaluation and throughput measurements. They remain opt-in review tools: automatic-filter precision gates are not met.
-- **Results:** [measured comparisons](docs/reports/RESULTS.md), [held-out browser evaluation](docs/reports/browser-evaluation.json) and [browser throughput](docs/reports/browser-benchmark.json).
-- **Active improvement experiment:** [balanced-data follow-up](ml/EXPERIMENTS.md) reduces rated-negative false positives in native evaluation. Candidate weights remain local until browser validation and efficiency checks finish.
+- **Models:** [MODEL.md](MODEL.md) — balanced character-context and BERT Mini INT8 are the selected opt-in review tools. Original three research models remain archived. Automatic-filter precision gates are not met.
+- **Results:** [measured comparisons](docs/reports/RESULTS.md), [7,000-comment browser evaluation](docs/reports/balanced-browser-evaluation.json) and [browser throughput](docs/reports/balanced-browser-benchmark.json).
+- **Balanced-data experiment:** [protocol and limitations](ml/EXPERIMENTS.md). Browser negative-post false positives are 4.06% (character) and 3.88% (Mini); quotation errors persist. The character baseline processes approximately 418,000 useful tokens/s on the reference M4 warm workload, not a mobile or Internet-speed guarantee.
 - **Plan:** [PLAN.md](PLAN.md) — milestones and trust boundaries. The earlier software-protection proposal is preserved in [PROTECTION.md](PROTECTION.md).
 
 ## Development

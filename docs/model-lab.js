@@ -119,19 +119,20 @@ document.querySelector('#model-consent').addEventListener('change', event => {
 });
 window.addEventListener('pagehide', () => unload());
 
-Promise.all(['reports/browser-evaluation.json', 'reports/browser-benchmark.json'].map(async path => {
+Promise.all(['reports/balanced-browser-evaluation.json', 'reports/balanced-browser-benchmark.json'].map(async path => {
   const response = await fetch(path);
   if (!response.ok) throw new Error('Published measurements are unavailable.');
   return response.json();
 })).then(([evaluation, benchmark]) => {
   const fragment = document.createDocumentFragment();
-  for (const name of ['linear', 'bert-tiny', 'bert-mini']) {
-    const accuracy = evaluation.models[name].subword_character_metrics.macro_character_f1;
+  for (const name of ['linear-balanced', 'bert-mini-balanced']) {
+    const accuracy = evaluation.models[name].original_span_subset.macro_character_f1;
+    const falsePositiveRate = evaluation.models[name].rated_non_toxic_subset.post_level_false_positive_rate;
     const timings = benchmark.models[name].benchmarks;
     const latency = timings.find(item => item.nominal_input_tokens === 128).worker.p95_ms;
     const throughput = timings.find(item => item.nominal_input_tokens === 1024).useful_tokens_per_second;
     const row = document.createElement('tr');
-    for (const value of [name, accuracy.toFixed(4), `${latency.toFixed(1)} ms`, Math.round(throughput).toLocaleString()]) {
+    for (const value of [name, accuracy.toFixed(4), `${(falsePositiveRate * 100).toFixed(2)}%`, `${latency.toFixed(1)} ms`, Math.round(throughput).toLocaleString()]) {
       const cell = document.createElement('td');
       cell.textContent = value;
       row.append(cell);

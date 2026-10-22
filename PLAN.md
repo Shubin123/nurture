@@ -18,8 +18,8 @@ Updated October 22, 2026. Reframes the original protection proposal around volun
 | Small marker next to replacements | Implemented in demo and extension |
 | Browser source picker, consent, local preview, stop | Implemented; requires manual browser/platform verification |
 | Another tab's ordinary DOM text replacement | Extension prototype; user must explicitly activate on that tab |
-| Context-sensitive English models | Tiny and Mini fine-tuned, INT8 exported, native and full held-out browser evaluation completed; opt-in review only, automatic-filter gates unmet |
-| Lightweight learned model | Character-context logistic model trained and quantized to 64 KiB weights; browser inference and benchmarks included |
+| Context-sensitive English models | Tiny/Mini comparison plus balanced Mini fine-tuning, INT8 export and full browser evaluation; balanced Mini selected as opt-in review only, automatic-filter gates unmet |
+| Lightweight learned model | Balanced character-context model selected; 64 KiB INT8 weights, ASCII hashing optimization, full browser evaluation and benchmarks included |
 | Stream OCR, pixel overlays, speech filtering | Not implemented |
 
 ## Proposed milestones
