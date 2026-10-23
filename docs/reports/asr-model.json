@@ -1,0 +1,28 @@
+{
+  "repo": "onnx-community/whisper-tiny.en_timestamped",
+  "revision": "aeaa13760958b03fac5062f457d317d3319c3168",
+  "base_model": "openai/whisper-tiny.en",
+  "license": "Apache-2.0",
+  "files": {
+    "config.json": {
+      "bytes": 2197,
+      "sha256": "251ea843b5901a99efa58c0b99b8052c6019aa3e7d2baf46693a1128ff606233"
+    },
+    "generation_config.json": {
+      "bytes": 1646,
+      "sha256": "7b2e8451ed5f118e75fdd991409d72119d21d2fef1eba9723f68fb9c57fe5dc9"
+    },
+    "vocab.json": {
+      "bytes": 999186,
+      "sha256": "f6bd25a65e4e63ca31360e9fb11c7e4f9a391a78385d640acd814092dd6eee4f"
+    },
+    "onnx/encoder_model_quantized.onnx": {
+      "bytes": 10097112,
+      "sha256": "697eaa5668bb13343965f423d6002273479b8508f592bd26970735516ed5039e"
+    },
+    "onnx/decoder_model_merged_quantized.onnx": {
+      "bytes": 30729881,
+      "sha256": "f2df67fbe1cf39c9b050d05029b55e217a9467f3453ae5110e2bcc0f5ba73652"
+    }
+  }
+}

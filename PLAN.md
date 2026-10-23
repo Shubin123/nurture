@@ -20,7 +20,9 @@ Updated October 22, 2026. Reframes the original protection proposal around volun
 | Another tab's ordinary DOM text replacement | Extension prototype; user must explicitly activate on that tab |
 | Context-sensitive English models | Tiny/Mini comparison plus balanced Mini fine-tuning, INT8 export and full browser evaluation; balanced Mini selected as opt-in review only, automatic-filter gates unmet |
 | Lightweight learned model | Balanced character-context model selected; 64 KiB INT8 weights, ASCII hashing optimization, full browser evaluation and benchmarks included |
-| Stream OCR, pixel overlays, speech filtering | Not implemented |
+| Shared-tab speech filtering | Implemented: local Whisper tiny.en (8-bit, CPU/WASM worker), configurable 3–8 s audio/video delay, mute or beep on rule and word-list matches, filtered captions, late-detection reporting; end-to-end test with synthesized speech. Real-content accuracy unmeasured |
+| Cited word-list sources | CMU Offensive/Profane Word List vendored with citation and checksum; manifest-driven additions plus session-only local `.txt` lists; phrase/hyphen/possessive matching; exceptions list |
+| Stream OCR, pixel overlays | Not implemented |
 
 ## Proposed milestones
 
@@ -29,7 +31,7 @@ Updated October 22, 2026. Reframes the original protection proposal around volun
 3. **Dataset preparation — completed for the research experiment:** pinned CC0 Toxic Spans data, normalized disjoint splits and checksums. No tab data collected. Author IDs are unavailable, so author/source independence is not established. See [MODEL.md](MODEL.md).
 4. **Model experiment — completed:** trained a character-context baseline and fine-tuned two compact span classifiers; compared native FP32/INT8 and actual browser outputs. Published precision, recall, character F1, confidence intervals, diagnostics and limitations. Independent dialect/fairness validation remains open.
 5. **Browser validation — research release completed, production gate open:** quantized models, self-hosted CPU/WASM worker, batched overlapping chunks, tokenization conformance, measured latency/throughput and a process-tree memory proxy. No GPU is required. Models remain explicitly opt-in review tools because automatic-filter accuracy and memory gates are not established.
-6. **Optional stream filtering:** separately validate OCR, region tracking and delayed overlay output. Do not relabel the existing preview as filtered. Audio remains a separate explicit opt-in milestone.
+6. **Stream filtering:** speech is implemented as an explicit opt-in (above). Next: measure word-level miss and late rates on real, consented recordings across accents, music and crosstalk; evaluate larger Whisper models against the latency budget. Separately validate OCR, region tracking and delayed overlay output; do not relabel shared pixels as filtered.
 
 ## Trust boundaries and release gates
 

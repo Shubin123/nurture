@@ -1,0 +1,56 @@
+{
+  "audio": "tests/fixtures/speech.wav",
+  "max_feature_abs_error": 0.00001329183578491211,
+  "text_matches_onnx_reference": true,
+  "text": " Hello there, that was a really stupid idea, and honestly you are acting like an idiot today, please be kind to everyone. What the hell happened here?",
+  "words": 27,
+  "pauses": [
+    {
+      "pause": [
+        0.65,
+        0.89
+      ],
+      "before": " there",
+      "before_end": 0.76,
+      "after": " that",
+      "after_start": 0.84,
+      "ok": true
+    },
+    {
+      "pause": [
+        2.53,
+        2.73
+      ],
+      "before": " idea",
+      "before_end": 2.6,
+      "after": " and",
+      "after_start": 2.84,
+      "ok": true
+    },
+    {
+      "pause": [
+        5.23,
+        5.48
+      ],
+      "before": " today",
+      "before_end": 5.28,
+      "after": " please",
+      "after_start": 5.46,
+      "ok": true
+    },
+    {
+      "pause": [
+        7.06,
+        7.3
+      ],
+      "before": " everyone",
+      "before_end": 7.06,
+      "after": " What",
+      "after_start": 7.38,
+      "ok": true
+    }
+  ],
+  "last_word_end_s": 8.74,
+  "speech_end_s": 8.57,
+  "inference_ms": 1636.3999999761581
+}

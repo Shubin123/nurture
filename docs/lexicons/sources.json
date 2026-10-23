@@ -1,0 +1,21 @@
+{
+  "note": "Plain-text word-list sources. Add an entry with id, title, url and citation, then run `npm run fetch-lexicons`; the script vendors the file verbatim to docs/lexicons/<id>.txt and records its checksum. The site never fetches these URLs at runtime.",
+  "sources": [
+    {
+      "id": "cmu-bad-words",
+      "title": "Offensive/Profane Word List",
+      "author": "Luis von Ahn's Research Group, Carnegie Mellon University",
+      "url": "https://www.cs.cmu.edu/~biglou/resources/bad-words.txt",
+      "page": "https://www.cs.cmu.edu/~biglou/resources/",
+      "citation": "Luis von Ahn's Research Group. Offensive/Profane Word List. Carnegie Mellon University. https://www.cs.cmu.edu/~biglou/resources/bad-words.txt",
+      "description": "A list of 1,300+ English terms that could be found offensive. The publisher notes that it contains some words that many people won't find offensive.",
+      "license_note": "No license is stated by the publisher. Redistributed unmodified with attribution for research and personal filtering; remove it if the publisher objects.",
+      "format": "lines",
+      "default_enabled": true,
+      "retrieved": "2026-10-22",
+      "file": "cmu-bad-words.txt",
+      "sha256": "76425270af0ea70e22b6f0145ba670d64bdf4304dac017324c2b3d14ea9b95fe",
+      "entries": 1383
+    }
+  ]
+}
