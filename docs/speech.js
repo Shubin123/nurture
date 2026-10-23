@@ -152,7 +152,8 @@ const NurtureSpeech = (() => {
         const offset = begin / RATE;
         const words = result.words
           .map(word => ({ text: word.text, start: offset + word.start, end: offset + Math.max(word.start, word.end) }))
-          .filter(word => (word.start + word.end) / 2 > committedUntil);
+          // The first word of a window can stretch back over the overlap, so judge words by where they end.
+          .filter(word => word.end > committedUntil + 0.1);
         // Overlapping passes can repeat the last committed word with slightly shifted timestamps.
         const last = transcript[transcript.length - 1];
         if (last && words[0] && words[0].start < committedUntil + 0.3 && NurtureFilter.tokenize(words[0].text).join(' ') === NurtureFilter.tokenize(last.text).join(' ')) words.shift();
@@ -164,7 +165,8 @@ const NurtureSpeech = (() => {
         state.words += committed.filter(word => /[\p{L}\p{N}]/u.test(word.text)).length;
         state.filtered += flaggedRanges(committed, getRules()).length;
         if (committed.length) committedUntil = committed[committed.length - 1].end;
-        if (silent) windowStart = end;
+        // Resume after the last committed word, not the window end, so a word starting in the quiet tail is kept.
+        if (silent) windowStart = Math.max(windowStart, committed.length ? Math.round(committedUntil * RATE) : end - RATE / 2);
         else if (committed.length) windowStart = Math.max(windowStart, Math.round(committedUntil * RATE));
         else if (!words.length) windowStart = Math.max(windowStart, end - RATE);
         state.error = '';
@@ -190,24 +192,22 @@ const NurtureSpeech = (() => {
     const frames = [];
     const videoDelayMs = () => delaySeconds * 1000 + ((context.outputLatency || 0) + (context.baseLatency || 0)) * 1000;
     let lastCapture = 0;
+    // Polled from the draw loop: frame callbacks may not fire for a video that is not displayed.
     function capture() {
-      if (state.stopped) return;
       const now = performance.now();
-      if (now - lastCapture >= 1000 / 15 && video.videoWidth) {
-        lastCapture = now;
-        const width = Math.min(960, video.videoWidth);
-        const height = Math.round(width * video.videoHeight / video.videoWidth);
-        createImageBitmap(video, { resizeWidth: width, resizeHeight: height, resizeQuality: 'low' })
-          .then(bitmap => state.stopped ? bitmap.close() : frames.push({ time: now, bitmap }))
-          .catch(() => {});
-      }
-      video.requestVideoFrameCallback(capture);
+      if (now - lastCapture < 1000 / 15 || !video.videoWidth || video.readyState < 2) return;
+      lastCapture = now;
+      const width = Math.min(960, video.videoWidth);
+      const height = Math.round(width * video.videoHeight / video.videoWidth);
+      createImageBitmap(video, { resizeWidth: width, resizeHeight: height, resizeQuality: 'low' })
+        .then(bitmap => state.stopped ? bitmap.close() : frames.push({ time: now, bitmap }))
+        .catch(() => {});
     }
-    video.requestVideoFrameCallback(capture);
 
     let animation = 0;
     function draw() {
       if (state.stopped) return;
+      capture();
       const due = performance.now() - videoDelayMs();
       let frame = null;
       while (frames.length && frames[0].time <= due) {

@@ -9,7 +9,7 @@ try {
   page.context().on('request', request => requests.push({ url: request.url(), method: request.method() }));
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto(baseUrl);
+  await page.goto(new URL('lab.html', baseUrl + '/').href);
   await page.waitForFunction(() => document.querySelector('#model-results').querySelectorAll('tr').length === 2);
   const release = await page.evaluate(async () => (await fetch('reports/release.json')).json());
   assert.deepEqual(await page.locator('#model-choice option').evaluateAll(options => options.map(option => option.value)), release.models.map(model => model.id));
@@ -38,12 +38,6 @@ try {
   assert.match(await page.locator('#model-status').innerText(), /tokens/);
   await page.locator('#model-consent').uncheck();
   assert.equal(await page.locator('#run-model').isDisabled(), true);
-  await page.locator('#share').click();
-  assert.match(await page.locator('#share-status').innerText(), /First confirm/);
-  await page.locator('#consent').check();
-  await page.evaluate(() => { navigator.mediaDevices.getDisplayMedia = async () => { throw new DOMException('denied', 'NotAllowedError'); }; });
-  await page.locator('#share').click();
-  await page.waitForFunction(() => document.querySelector('#share-status').textContent.includes('cancelled'));
   await page.setViewportSize({ width: 375, height: 812 });
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
   await page.goto(baseUrl);
@@ -64,7 +58,7 @@ try {
   assert.equal(await page.locator('#dynamic').innerText(), 'stupid');
   assert.deepEqual(errors, []);
   assert.equal(requests.every(request => request.method === 'GET' && new URL(request.url).hostname === new URL(baseUrl).hostname), true);
-  console.log('PASS: real CPU/WASM inference, rule/model consent, marked output, unload, mobile layout, denied capture, DOM changes, editable exclusions and restoration.');
+  console.log('PASS: real CPU/WASM inference, rule/model consent, marked output, unload, mobile layout, DOM changes, editable exclusions and restoration.');
 } finally {
   await browser.close();
 }

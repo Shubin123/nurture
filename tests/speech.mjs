@@ -35,8 +35,14 @@ try {
   assert.ok(worklet.audible > 0.5 && worklet.after > 0.5);
   assert.ok(worklet.muted < 1e-6, `muted peak ${worklet.muted}`);
 
-  await page.locator('#speech-consent').check();
-  await page.waitForFunction(() => document.querySelector('#speech-status').textContent.includes('model ready'), null, { timeout: 120000 });
+  // Nothing loads before the user asks to share.
+  assert.equal([...hosts].length, 1);
+  await page.evaluate(() => { navigator.mediaDevices.getDisplayMedia = async () => { throw new DOMException('denied', 'NotAllowedError'); }; });
+  await page.locator('#share').click();
+  await page.waitForFunction(() => document.querySelector('#status').textContent.includes('cancelled'));
+  await page.setViewportSize({ width: 375, height: 812 });
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  await page.setViewportSize({ width: 1280, height: 800 });
   await page.evaluate(() => {
     navigator.mediaDevices.getDisplayMedia = async () => {
       const audio = new Audio('/__fixture/speech.wav');
@@ -52,25 +58,25 @@ try {
       return new MediaStream([...canvas.captureStream(30).getVideoTracks(), ...destination.stream.getAudioTracks()]);
     };
   });
-  await page.locator('#consent').check();
   await page.locator('#share').click();
-  await page.waitForFunction(() => document.querySelector('#share-status').textContent.includes('Filtering speech'), null, { timeout: 30000 }).catch(async error => { console.log(await page.locator('#share-status').innerText(), await page.locator('#speech-status').innerText(), errors); throw error; });
+  await page.waitForFunction(() => document.querySelector('#status').textContent.includes('words heard'), null, { timeout: 120000 }).catch(async error => { console.log(await page.locator('#status').innerText(), await page.locator('#stage-message').innerText(), errors); throw error; });
   // Wait until the whole clip (about 9 s + 4 s delay) has played and the transcript stops changing.
-  await page.waitForFunction(() => /happened/i.test(document.querySelector('#captions').textContent), null, { timeout: 60000 }).catch(async error => { console.log('captions:', await page.locator('#captions').innerText(), '\nstatus:', await page.locator('#speech-status').innerText()); throw error; });
+  await page.waitForFunction(() => /happened/i.test(document.querySelector('#captions').textContent), null, { timeout: 60000 }).catch(async error => { console.log('captions:', await page.locator('#captions').innerText(), '\nstatus:', await page.locator('#status').innerText()); throw error; });
   await page.waitForTimeout(4000);
   const captions = await page.locator('#captions').innerText();
-  const status = await page.locator('#speech-status').innerText();
+  const status = await page.locator('#status').innerText();
   console.log(`captions: ${captions}\nstatus: ${status}`);
   assert.match(captions, /unhelpful\*/);
   assert.match(captions, /person\*/);
   assert.doesNotMatch(captions, /stupid|idiot/i);
-  assert.match(status, /\b3 filtered/);
+  assert.match(status, /\b3 muted/);
   assert.match(captions, /what the bleep\*/i);
   assert.match(captions, /that was a really unhelpful\*/i);
   assert.doesNotMatch(status, /too late/);
   assert.equal(await page.locator('#delayed-preview').isHidden(), false);
   await page.locator('#stop').click();
-  assert.equal(await page.locator('#captions').isHidden(), true);
+  assert.equal(await page.locator('#captions').innerText(), '');
+  assert.equal(await page.locator('#share').isVisible(), true);
   assert.deepEqual(errors, []);
   assert.deepEqual([...hosts], [new URL(baseUrl).hostname]);
   console.log('PASS: delayed/muted worklet output, local Whisper transcription, filtered captions, no late mutes, no third-party requests.');
