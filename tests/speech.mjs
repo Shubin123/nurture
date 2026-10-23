@@ -37,9 +37,20 @@ try {
 
   // Nothing loads before the user asks to share.
   assert.equal([...hosts].length, 1);
-  await page.evaluate(() => { navigator.mediaDevices.getDisplayMedia = async () => { throw new DOMException('denied', 'NotAllowedError'); }; });
+  await page.evaluate(() => {
+    navigator.mediaDevices.getDisplayMedia = async () => { throw new DOMException('denied', 'NotAllowedError'); };
+    window.seenProgress = [];
+    new MutationObserver(() => {
+      if (!document.querySelector('#load-progress').hidden) window.seenProgress.push(document.querySelector('#stage-message').textContent);
+    }).observe(document.querySelector('#stage'), { subtree: true, attributes: true, childList: true, characterData: true });
+  });
   await page.locator('#share').click();
   await page.waitForFunction(() => document.querySelector('#status').textContent.includes('cancelled'));
+  // Cancelling the picker does not stop the download; its progress shows in the viewport.
+  await page.waitForFunction(() => window.seenProgress.length, null, { timeout: 60000 });
+  await page.waitForFunction(() => document.querySelector('#load-progress').hidden && document.querySelector('#stage-message').hidden, null, { timeout: 120000 });
+  const seen = await page.evaluate(() => window.seenProgress);
+  assert.ok(seen.some(text => /Downloading the speech model · \d+ \/ 56 MB/.test(text)), seen.slice(-3).join(' | '));
   await page.setViewportSize({ width: 375, height: 812 });
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
   await page.setViewportSize({ width: 1280, height: 800 });
@@ -77,6 +88,19 @@ try {
   await page.locator('#stop').click();
   assert.equal(await page.locator('#captions').innerText(), '');
   assert.equal(await page.locator('#share').isVisible(), true);
+  // A second visit loads the model from Cache Storage, not the network.
+  const modelRequests = [];
+  page.on('request', request => /\/models\/|\.wasm$/.test(request.url()) && modelRequests.push(request.url()));
+  await page.reload();
+  const cached = await page.evaluate(async () => {
+    const started = performance.now();
+    let sawCache = false;
+    await NurtureSpeech.load(progress => { sawCache ||= Boolean(progress.cached); });
+    return { sawCache, ms: performance.now() - started };
+  });
+  console.log(`cached reload: ${Math.round(cached.ms)} ms`);
+  assert.equal(cached.sawCache, true);
+  assert.deepEqual(modelRequests, []);
   assert.deepEqual(errors, []);
   assert.deepEqual([...hosts], [new URL(baseUrl).hostname]);
   console.log('PASS: delayed/muted worklet output, local Whisper transcription, filtered captions, no late mutes, no third-party requests.');

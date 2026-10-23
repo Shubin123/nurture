@@ -18,7 +18,7 @@
       <div id="stage" class="stage">
         <video id="preview" muted playsinline aria-hidden="true"></video>
         <canvas id="delayed-preview" aria-label="Shared tab, delayed and with flagged words muted"></canvas>
-        <div class="stage-center"><button id="share" type="button">Share a tab</button><p id="stage-message" class="stage-message" hidden></p></div>
+        <div class="stage-center"><button id="share" type="button">Share a tab</button><p id="stage-message" class="stage-message" hidden></p><progress id="load-progress" max="1" value="0" aria-label="Speech model download" hidden></progress></div>
         <div id="captions" class="captions" aria-live="off" aria-label="Captions with flagged words replaced"></div>
       </div>
       <div class="bar">
@@ -27,7 +27,7 @@
         <label>Delay <select id="speech-delay"><option value="3">3 s</option><option value="4" selected>4 s</option><option value="6">6 s</option><option value="8">8 s</option></select></label>
         <p id="status" role="status"></p>
       </div>
-      <p class="fine">Speech-to-text runs offline in this page (Whisper tiny.en, about 55 MB downloaded from this site on first use). No audio or text is uploaded. Recognition can miss words. Pictures are not filtered.</p>
+      <p class="fine">Speech-to-text runs offline in this page (Whisper tiny.en, about 56 MB downloaded from this site once, then kept in this browser). No audio or text is uploaded. Recognition can miss words. Pictures are not filtered.</p>
       <details class="words">
         <summary>Words to filter</summary>
         <div class="two">

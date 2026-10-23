@@ -16,20 +16,73 @@ const LAYERS = 4;
 const HEADS = 6;
 let whisper = null;
 
-async function fetchAsset(path, type = 'json') {
-  const response = await fetch(new URL(MODEL + path, self.location.href));
-  if (!response.ok) throw new Error(`Could not load ${path}: ${response.status}`);
-  return response[type]();
+// Pinned files (see docs/reports/asr-model.json); bump CACHE when any of them changes.
+const CACHE = 'nurture-speech-aeaa137-ort1.30.0';
+const FILES = [
+  [MODEL + 'generation_config.json', 1646],
+  [MODEL + 'vocab.json', 999186],
+  [MODEL + 'onnx/encoder_model_quantized.onnx', 10097112],
+  [MODEL + 'onnx/decoder_model_merged_quantized.onnx', 30729881],
+  ['vendor/ort-wasm-simd-threaded.wasm', 14239897]
+];
+
+// Kept in the browser's Cache Storage after the first download, so later visits load offline.
+async function fetchAll(progress) {
+  let store = null;
+  try {
+    store = await caches.open(CACHE);
+    for (const name of await caches.keys()) if (name.startsWith('nurture-speech-') && name !== CACHE) await caches.delete(name);
+  } catch {
+    store = null;
+  }
+  const total = FILES.reduce((sum, [, bytes]) => sum + bytes, 0);
+  const loaded = FILES.map(() => 0);
+  let cached = 0;
+  const report = () => progress({ loaded: loaded.reduce((a, b) => a + b, 0), total, cached: cached === FILES.length });
+  return Promise.all(FILES.map(async ([path, bytes], index) => {
+    const url = new URL(path, self.location.href).href;
+    const hit = await store?.match(url).catch(() => null);
+    if (hit) {
+      cached += 1;
+      const buffer = await hit.arrayBuffer();
+      loaded[index] = bytes;
+      report();
+      return buffer;
+    }
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Could not load ${path}: ${response.status}`);
+    const reader = response.body.getReader();
+    const chunks = [];
+    let size = 0;
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+      size += value.length;
+      loaded[index] = Math.min(size, bytes);
+      report();
+    }
+    const buffer = new Uint8Array(size);
+    let offset = 0;
+    for (const chunk of chunks) {
+      buffer.set(chunk, offset);
+      offset += chunk.length;
+    }
+    await store?.put(url, new Response(buffer)).catch(() => {});
+    return buffer.buffer;
+  }));
 }
 
-async function load() {
+async function load(progress) {
   if (whisper) return { cached: true };
   const started = performance.now();
   const options = { executionProviders: ['wasm'], graphOptimizationLevel: 'all' };
-  const [generation, vocabulary, encoderBytes, decoderBytes] = await Promise.all([
-    fetchAsset('generation_config.json'), fetchAsset('vocab.json'),
-    fetchAsset('onnx/encoder_model_quantized.onnx', 'arrayBuffer'), fetchAsset('onnx/decoder_model_merged_quantized.onnx', 'arrayBuffer')
-  ]);
+  const [generationBytes, vocabularyBytes, encoderBytes, decoderBytes, wasmBytes] = await fetchAll(progress);
+  const text = new TextDecoder();
+  const generation = JSON.parse(text.decode(generationBytes));
+  const vocabulary = JSON.parse(text.decode(vocabularyBytes));
+  progress({ preparing: true });
+  ort.env.wasm.wasmBinary = wasmBytes;
   const encoder = await ort.InferenceSession.create(encoderBytes, options);
   const decoder = await ort.InferenceSession.create(decoderBytes, options);
   const eot = generation.eos_token_id;
@@ -118,7 +171,7 @@ async function transcribe(audio) {
 self.onmessage = async event => {
   const { id, action } = event.data;
   try {
-    const result = action === 'load' ? await load() : action === 'transcribe' ? await transcribe(event.data.audio) : null;
+    const result = action === 'load' ? await load(progress => self.postMessage({ id, progress })) : action === 'transcribe' ? await transcribe(event.data.audio) : null;
     if (!result) throw new Error('Unknown action.');
     self.postMessage({ id, result });
   } catch (error) {

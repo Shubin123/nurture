@@ -13,12 +13,13 @@ const NurtureSpeech = (() => {
   let requestId = 0;
   const pending = new Map();
 
-  function call(action, values = {}, transfer = []) {
+  function call(action, values = {}, transfer = [], onProgress = null) {
     if (!worker) {
       worker = new Worker('asr-worker.js', { type: 'module' });
       worker.onmessage = event => {
         const entry = pending.get(event.data.id);
         if (!entry) return;
+        if (event.data.progress) return entry.onProgress?.(event.data.progress);
         pending.delete(event.data.id);
         if (event.data.error) entry.reject(new Error(event.data.error));
         else entry.resolve(event.data.result);
@@ -27,13 +28,16 @@ const NurtureSpeech = (() => {
     }
     return new Promise((resolve, reject) => {
       const id = ++requestId;
-      pending.set(id, { resolve, reject });
+      pending.set(id, { resolve, reject, onProgress });
       worker.postMessage({ id, action, ...values }, transfer);
     });
   }
 
-  function load() {
-    ready ??= call('load').catch(error => {
+  // Several callers may wait on one load; each gets progress updates.
+  const listeners = new Set();
+  function load(onProgress) {
+    if (onProgress) listeners.add(onProgress);
+    ready ??= call('load', {}, [], progress => listeners.forEach(listener => listener(progress))).finally(() => listeners.clear()).catch(error => {
       unload();
       throw error;
     });
@@ -44,6 +48,7 @@ const NurtureSpeech = (() => {
     worker?.terminate();
     worker = null;
     ready = null;
+    listeners.clear();
     for (const entry of pending.values()) entry.reject(new Error('Speech model stopped.'));
     pending.clear();
   }
@@ -69,8 +74,8 @@ const NurtureSpeech = (() => {
     return flagged;
   }
 
-  async function start({ context, stream, delaySeconds, mode, getRules, canvas, video, onUpdate }) {
-    await load();
+  async function start({ context, stream, delaySeconds, mode, getRules, canvas, video, onUpdate, onProgress }) {
+    await load(onProgress);
     await context.audioWorklet.addModule('speech-worklet.js');
     const rate = context.sampleRate;
     const delayFrames = Math.round(delaySeconds * rate);

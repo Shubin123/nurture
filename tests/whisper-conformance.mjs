@@ -25,7 +25,7 @@ try {
   result = await page.evaluate(async samples => {
     const worker = new Worker('asr-worker.js', { type: 'module' });
     const call = (id, message) => new Promise((resolve, reject) => {
-      worker.onmessage = event => event.data.error ? reject(new Error(event.data.error)) : resolve(event.data.result);
+      worker.onmessage = event => event.data.progress ? null : event.data.error ? reject(new Error(event.data.error)) : resolve(event.data.result);
       worker.postMessage({ id, ...message });
     });
     await call(1, { action: 'load' });

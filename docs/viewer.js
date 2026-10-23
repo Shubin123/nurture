@@ -7,6 +7,7 @@ const delayedPreview = document.querySelector('#delayed-preview');
 const captions = document.querySelector('#captions');
 const stageMessage = document.querySelector('#stage-message');
 const status = document.querySelector('#status');
+const loadProgress = document.querySelector('#load-progress');
 const speechMode = document.querySelector('#speech-mode');
 const speechDelay = document.querySelector('#speech-delay');
 let activeStream = null;
@@ -21,6 +22,18 @@ function setLive(live, message = '') {
   shareButton.hidden = live;
   stopButton.disabled = !live;
   speechDelay.disabled = live;
+}
+
+function showProgress({ loaded, total, cached, preparing }) {
+  stageMessage.hidden = false;
+  loadProgress.hidden = Boolean(preparing);
+  if (preparing) {
+    stageMessage.textContent = 'Preparing the speech model…';
+    return;
+  }
+  loadProgress.value = loaded / total;
+  const mb = bytes => (bytes / 1e6).toFixed(0);
+  stageMessage.textContent = cached ? 'Loading the speech model from this browser…' : `Downloading the speech model · ${mb(loaded)} / ${mb(total)} MB (saved for next time)`;
 }
 
 let shownSpeech = '';
@@ -64,7 +77,13 @@ shareButton.addEventListener('click', async () => {
   const context = new AudioContext();
   activeContext = context;
   // Start loading the speech model while the picker is open.
-  NurtureSpeech.load().catch(() => {});
+  NurtureSpeech.load(showProgress).then(() => {
+    loadProgress.hidden = true;
+    if (!stage.classList.contains('live')) stageMessage.hidden = true;
+  }, error => {
+    loadProgress.hidden = true;
+    stageMessage.textContent = `Speech model unavailable: ${error.message}`;
+  });
   status.textContent = 'Choose a tab and turn on “Also share tab audio”.';
   try {
     const stream = await navigator.mediaDevices.getDisplayMedia({
@@ -83,7 +102,7 @@ shareButton.addEventListener('click', async () => {
     setLive(true, 'Loading the speech model…');
     status.textContent = '';
     const delaySeconds = Number(speechDelay.value);
-    const session = await NurtureSpeech.start({ context, stream, delaySeconds, mode: speechMode.value, getRules: currentRules, canvas: delayedPreview, video: preview, onUpdate: showSpeech });
+    const session = await NurtureSpeech.start({ context, stream, delaySeconds, mode: speechMode.value, getRules: currentRules, canvas: delayedPreview, video: preview, onUpdate: showSpeech, onProgress: showProgress });
     if (version !== requestVersion) return session.stop();
     speechSession = session;
     stageMessage.textContent = `Listening… playback is ${delaySeconds} s behind the tab.`;
