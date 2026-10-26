@@ -1,5 +1,8 @@
 # Nurture English models · trained research release
 
+Experimental, unserved coarse-to-fine residual-VQ cascade: see
+[research protocol and failures](ml/CASCADE.md). This does not change the selected models.
+
 Five variants are trained, exported and evaluated locally: the initial three models plus balanced-context character and Mini variants. The two balanced variants are selected in the website's explicit-download model lab, with versioned asset URLs. This is **not an autonomous safety-filter release**: precision and independently validated benign-false-positive gates remain unmet. No private tabs, streams or customer content were used for training.
 
 ## Initial comparison candidates (archived)
