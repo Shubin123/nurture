@@ -2,6 +2,9 @@
 
 Repository: https://github.com/Shubin123/nurture
 
+Follow-up: [kernel search and supervised cosine-VQ repair](KERNEL_SEARCH.md).
+The original pilot below remains a historical negative result.
+
 Status: research-only; not a served model, not an automatic replacement policy.
 This work covers the shared residual-VQ encoder and span-classification experiment,
 not the later generator or autoregressive roadmap stages. No browser, extension,

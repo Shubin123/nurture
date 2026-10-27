@@ -2,6 +2,7 @@
 
 Experimental, unserved coarse-to-fine residual-VQ cascade: see
 [research protocol and failures](ml/CASCADE.md). This does not change the selected models.
+The [kernel-search follow-up](ml/KERNEL_SEARCH.md) repairs collapse but still does not beat the served classifiers.
 
 Five variants are trained, exported and evaluated locally: the initial three models plus balanced-context character and Mini variants. The two balanced variants are selected in the website's explicit-download model lab, with versioned asset URLs. This is **not an autonomous safety-filter release**: precision and independently validated benign-false-positive gates remain unmet. No private tabs, streams or customer content were used for training.
 

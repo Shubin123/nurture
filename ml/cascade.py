@@ -6,6 +6,8 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
+from vq_search import KERNELS, nearest_codes
+
 
 @dataclass
 class CascadeConfig:
@@ -15,6 +17,10 @@ class CascadeConfig:
     slots: tuple = (2, 4, 8)
     codes: int = 64
     blocks: int = 1
+    code_width: int = 0
+    metric: str = 'euclidean'
+    lookup: str = 'reference'
+    commitment: float = 0.25
 
     def __post_init__(self):
         self.slots = tuple(self.slots)
@@ -22,6 +28,8 @@ class CascadeConfig:
             raise ValueError('Use three or four strictly increasing scales.')
         if self.slots[0] < 1 or self.slots[-1] > self.length or self.width % 4:
             raise ValueError('Invalid slot schedule or attention width.')
+        if self.metric not in ('euclidean', 'cosine') or self.lookup not in KERNELS or self.code_width < 0 or self.codes < 2 or self.commitment < 0:
+            raise ValueError('Invalid quantization configuration.')
 
 
 def resize(values, length):
@@ -36,7 +44,10 @@ class Cascade(nn.Module):
         self.position = nn.Embedding(config.length, config.width)
         block = nn.TransformerEncoderLayer(config.width, 4, config.width * 2, dropout=0.0, batch_first=True)
         self.encoder = nn.TransformerEncoder(block, config.blocks, enable_nested_tensor=False)
-        self.codebooks = nn.ModuleList([nn.Embedding(config.codes, config.width) for _ in config.slots])
+        code_width = config.code_width or config.width
+        self.code_in = nn.ModuleList([nn.Identity() if code_width == config.width else nn.Linear(config.width, code_width, bias=False) for _ in config.slots])
+        self.code_out = nn.ModuleList([nn.Identity() if code_width == config.width else nn.Linear(code_width, config.width, bias=False) for _ in config.slots])
+        self.codebooks = nn.ModuleList([nn.Embedding(config.codes, code_width) for _ in config.slots])
         for codebook in self.codebooks:
             nn.init.normal_(codebook.weight, std=0.1)
         self.heads = nn.ModuleList([nn.Sequential(nn.LayerNorm(config.width), nn.Linear(config.width, 2)) for _ in config.slots])
@@ -47,19 +58,42 @@ class Cascade(nn.Module):
         hidden = self.encoder(self.embedding(tokens) + self.position(positions), src_key_padding_mask=~mask.bool())
         return hidden * mask.unsqueeze(-1)
 
-    def quantize(self, residual, mask, level):
+    def pool(self, residual, mask, level):
         slots = self.config.slots[level]
         weights = F.adaptive_avg_pool1d(mask.float().unsqueeze(1), slots).transpose(1, 2)
         pooled = F.adaptive_avg_pool1d((residual * mask.unsqueeze(-1)).transpose(1, 2), slots).transpose(1, 2)
         pooled = pooled / weights.clamp_min(1e-6)
+        pooled = self.code_in[level](pooled)
+        if self.config.metric == 'cosine':
+            pooled = F.normalize(pooled, dim=-1)
+        return pooled, weights
+
+    def quantize(self, residual, mask, level):
+        pooled, weights = self.pool(residual, mask, level)
         codebook = self.codebooks[level].weight
-        distances = pooled.square().sum(-1, keepdim=True) + codebook.square().sum(-1) - 2 * pooled @ codebook.T
-        indices = distances.argmin(-1)
+        indices = nearest_codes(pooled, codebook, self.config.metric, self.config.lookup)
+        if self.config.metric == 'cosine':
+            codebook = F.normalize(codebook, dim=-1)
         quantized = F.embedding(indices, codebook)
         valid = weights.gt(0).expand_as(pooled)
-        loss = ((quantized - pooled.detach()).square() + 0.25 * (pooled - quantized.detach()).square())[valid].mean()
+        loss = ((quantized - pooled.detach()).square() + self.config.commitment * (pooled - quantized.detach()).square())[valid].mean()
         straight_through = pooled + (quantized - pooled).detach()
-        return resize(straight_through * weights.gt(0), residual.shape[1]), loss, indices[weights.squeeze(-1).gt(0)]
+        return resize(self.code_out[level](straight_through) * weights.gt(0), residual.shape[1]), loss, indices[weights.squeeze(-1).gt(0)]
+
+    @torch.no_grad()
+    def initialize_codebooks(self, tokens, mask):
+        hidden = self.encode(tokens, mask)
+        cumulative = torch.zeros_like(hidden)
+        for level in range(len(self.heads)):
+            pooled, weights = self.pool(hidden - cumulative, mask, level)
+            samples = pooled[weights.squeeze(-1).gt(0)]
+            if not len(samples):
+                raise ValueError('Codebook initialization needs nonpadding slots.')
+            order = torch.randperm(len(samples), device=samples.device)
+            indices = order[torch.arange(self.config.codes, device=samples.device) % len(samples)]
+            self.codebooks[level].weight.copy_(samples[indices])
+            update, _, _ = self.quantize(hidden - cumulative, mask, level)
+            cumulative += update
 
     def forward(self, tokens, mask, reconstruct=True, max_levels=None):
         hidden = self.encode(tokens, mask)
